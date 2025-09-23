@@ -1,22 +1,19 @@
+import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-print(f"URL: {url}")
-print(f"Key: {key[:20]}...") # Hanya tampilkan 20 karakter pertama
+_client: Client = None
 
-try:
-    supabase: Client = create_client(url, key)
-    print("✅ Koneksi Supabase berhasil!")
-    
-    # Test query sederhana
-    result = supabase.table('siswa').select("count", count="exact").execute()
-    print(f"📊 Jumlah siswa dalam database: {result.count}")
-    
-except Exception as e:
-    print(f"❌ Error koneksi: {e}")
+
+def get_supabase_client() -> Client:
+    global _client
+    if _client is None:
+        if not SUPABASE_URL or not SUPABASE_KEY:
+            raise RuntimeError("SUPABASE_URL atau SUPABASE_KEY belum di-set di .env")
+        _client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    return _client

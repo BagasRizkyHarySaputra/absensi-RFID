@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Absensi Siswa</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔧 Admin Panel Absensi</h1>
+      <p>Kelola status kehadiran siswa - {{ tanggal_hari_ini }}</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card info">
+        <h3>Total Absensi Hari Ini</h3>
+        <div class="number">{{ stats_hari_ini.total }}</div>
+      </div>
+
+      <div class="stat-card success">
+        <h3>Siswa Hadir</h3>
+        <div class="number">{{ stats_hari_ini.hadir }}</div>
+      </div>
+
+      <div class="stat-card danger">
+        <h3>Ditolak</h3>
+        <div class="number">{{ stats_hari_ini.ditolak }}</div>
+      </div>
+
+      <div class="stat-card info">
+        <h3>Persentase Hadir</h3>
+        <div class="number">{{ stats_hari_ini.persentase_hadir }}%</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="alert" class="alert"></div>
+
+      <div class="section">
+        <h2>🛠️ Kelola Kehadiran Hari Ini</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Nama</th>
+                <th>NIS</th>
+                <th>Kelas</th>
+                <th>Status</th>
+                <th>Keterangan</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for entry in kehadiran_hari_ini %}
+              <tr>
+                <td>{{ entry.waktu_absen[:19].replace('T', ' ') }}</td>
+                <td><strong>{{ entry.nama }}</strong></td>
+                <td>{{ entry.nis }}</td>
+                <td>{{ entry.kelas }}</td>
+                <td>
+                  <span class="status {{ entry.status }}">{{ entry.status }}</span>
+                </td>
+                <td>
+                  {% if entry.alasan_ditolak %}
+                    {{ entry.alasan_ditolak }}
+                  {% else %}
+                    ✅ Sukses
+                  {% endif %}
+                </td>
+                <td>
+                     <button class="action-btn btn-hadir" onclick="updateStatus('{{ entry.id }}', 'hadir')">✅ Hadir</button>
+                     <button class="action-btn btn-tolak" onclick="openRejectModal('{{ entry.id }}')">❌ Tolak</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal untuk input alasan penolakan -->
+  <div id="rejectModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeRejectModal()">&times;</span>
+      <h3>Alasan Penolakan</h3>
+      <textarea id="rejectReason" placeholder="Masukkan alasan penolakan..." rows="3"></textarea>
+      <button onclick="confirmReject()">Konfirmasi</button>
+      <button onclick="closeRejectModal()">Batal</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
