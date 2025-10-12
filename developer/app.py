@@ -228,7 +228,6 @@ def api_absensi():
     """Endpoint untuk ESP32 kirim data absensi"""
     try:
         data = request.get_json()
-
         nama = data.get('nama', '').strip()
         nis = data.get('nis', '').strip()
         nisn = data.get('nisn', '').strip()
@@ -331,24 +330,13 @@ def api_debug():
 
 
 # ===============================
-# WEB DASHBOARD
+# WEB DASHBOARD - ADMIN ONLY
 # ===============================
 
 @app.route('/')
-def dashboard_host():
-    """Dashboard utama (Host)"""
-    tanggal_hari_ini = datetime.now().strftime("%Y-%m-%d")
-    kehadiran_hari_ini = absensi_system.get_kehadiran(tanggal=tanggal_hari_ini)
-    stats_hari_ini = absensi_system.get_stats_kehadiran(tanggal=tanggal_hari_ini)
-    semua_kehadiran = absensi_system.get_kehadiran(limit=50)
-
-    return render_template(
-        'dashboard_host.html',
-        tanggal_hari_ini=tanggal_hari_ini,
-        kehadiran_hari_ini=kehadiran_hari_ini,
-        semua_kehadiran=semua_kehadiran,
-        stats_hari_ini=stats_hari_ini
-    )
+def index():
+    """Redirect ke admin panel"""
+    return render_template('redirect_admin.html')
 
 
 @app.route('/admin')
@@ -366,19 +354,16 @@ def admin_panel():
     )
 
 
-@app.route('/test')
-def test_page():
-    """Halaman test untuk simulasi ESP32"""
-    return render_template('dashboard_test.html')
-
-
 if __name__ == '__main__':
     print("🚀 Starting Absensi Web Server...")
-    print("📊 Dashboard: http://localhost:5000")
+    print("=" * 50)
     print("🔧 Admin Panel: http://localhost:5000/admin")
-    print("🧪 Test ESP32: http://localhost:5000/test")
-    print("🔌 API Absensi: POST http://localhost:5000/api/absensi")
-    print("📋 API Data: GET http://localhost:5000/api/kehadiran")
-    print("⚙️ API Update Status: POST http://localhost:5000/api/update_status")
+    print("=" * 50)
+    print("\n� API Endpoints untuk ESP32:")
+    print("  POST http://localhost:5000/api/absensi")
+    print("  GET  http://localhost:5000/api/kehadiran")
+    print("  POST http://localhost:5000/api/update_status")
+    print("  GET  http://localhost:5000/api/debug")
+    print("=" * 50)
 
     app.run(host='0.0.0.0', port=5000, debug=True)

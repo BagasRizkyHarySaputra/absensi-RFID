@@ -1,9 +1,0 @@
-body { font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; }
-.form-group { margin: 15px 0; }
-label { display: block; margin-bottom: 5px; font-weight: bold; }
-input, button { width: 100%; padding: 10px; font-size: 16px; }
-button { background: #007bff; color: white; border: none; cursor: pointer; margin-top: 20px; }
-button:hover { background: #0056b3; }
-.response { margin-top: 20px; padding: 15px; border-radius: 5px; }
-.success { background: #d4edda; color: #155724; }
-.error { background: #f8d7da; color: #721c24; }

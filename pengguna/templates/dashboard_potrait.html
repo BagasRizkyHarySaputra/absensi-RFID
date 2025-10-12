@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mobile - Absensi Siswa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_potrait.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-top">
+                <a href="{{ url_for('logout') }}" class="logout-icon">🚪</a>
+                <div class="settings-icon">⚙️</div>
+            </div>
+            
+            <div class="profile-section">
+                <div class="profile-circle"></div>
+                <div class="profile-name">{{ nama }}</div>
+                <div class="profile-class">{{ kelas }}</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" id="histori-tab" onclick="showTab('histori')">Histori</div>
+            <div class="nav-tab" id="jadwal-tab" onclick="showTab('jadwal')">Jadwal</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Histori Content -->
+            <div class="tab-content active" id="histori-content">
+                <div class="section-title">- HISTORY -</div>
+                
+                <div class="history-list">
+                    {% if history %}
+                        {% for item in history %}
+                        <div class="history-item {{ item.status_class }}">
+                            <div class="history-time">{{ item.time }}</div>
+                            <div class="history-info">
+                                <div class="history-day">{{ item.day }}, {{ item.date }}</div>
+                                <div class="history-message">{{ item.message }}</div>
+                            </div>
+                            <div class="history-icon">{{ item.icon }}</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="history-item warning">
+                            <div class="history-time">--</div>
+                            <div class="history-info">
+                                <div class="history-message">Belum ada data presensi</div>
+                            </div>
+                            <div class="history-icon">ℹ️</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Jadwal Content -->
+            <div class="tab-content" id="jadwal-content">
+                <div class="section-title">JADWAL KELAS - {{ kelas }}</div>
+                <div class="day-title">- SENIN -</div>
+                
+                <div class="schedule-list">
+                    <div class="schedule-item">
+                        <div class="schedule-time">07.00</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU INUNG</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">07.45</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU INUNG</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">08.30</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU INUNG</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">09.15</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU INUNG</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">10.15</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU NISA</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">11.00</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU NISA</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">12.30</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU NISA</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">13.15</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">KK SIJA</div>
+                            <div class="schedule-teacher">BU NISA</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">14.00</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">JERMAN</div>
+                            <div class="schedule-teacher">FRAU VANDA</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-time">14.45</div>
+                        <div class="schedule-info">
+                            <div class="schedule-subject">JERMAN</div>
+                            <div class="schedule-teacher">FRAU VANDA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Menu -->
+        <div class="bottom-menu">
+            <div class="menu-item" onclick="showPopup('FAQ')">FAQ</div>
+            <div class="menu-item" onclick="showPopup('PENGAJUAN')">PENGAJUAN</div>
+            <div class="menu-item" onclick="showPopup('KEBIJAKAN')">KEBIJAKAN<br>PRIVASI</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Creator: Bagas Rizky
+        </div>
+    </div>
+
+    <!-- Popup Modal -->
+    <div class="modal" id="info-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title">Judul</h3>
+            <p id="modal-text">Isi informasi akan muncul di sini.</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.getElementById(tabName + '-content').classList.add('active');
+        }
+
+        // Popup functions
+        function showPopup(title) {
+            const modal = document.getElementById('info-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalText = document.getElementById('modal-text');
+            
+            modalTitle.textContent = title;
+            
+            let text = '';
+            switch(title) {
+                case 'FAQ':
+                    text = 'Ini adalah halaman FAQ. Di sini Anda bisa menemukan jawaban atas pertanyaan umum tentang sistem absensi siswa.';
+                    break;
+                case 'PENGAJUAN':
+                    text = 'Halaman pengajuan digunakan untuk mengajukan permohonan izin, sakit, atau keterlambatan.';
+                    break;
+                case 'KEBIJAKAN':
+                    text = 'Kebijakan privasi kami menjelaskan bagaimana data pribadi Anda dikumpulkan, digunakan, dan dilindungi.';
+                    break;
+            }
+            
+            modalText.textContent = text;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('info-modal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('info-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+    <!-- Debug Info -->
+    <div style="position: fixed; bottom: 60px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 8px; border-radius: 5px; font-size: 11px; z-index: 9999;">
+        <strong>POTRAIT MODE</strong><br>
+        NIS: {{ nis }}<br>
+        History: {{ history|length }}
+    </div>
+</body>
+</html>
