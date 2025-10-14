@@ -315,6 +315,10 @@ def api_debug():
 
         sample_siswa = absensi_system.client.table("siswa").select("*").limit(3).execute().data
         sample_kehadiran = absensi_system.client.table("kehadiran").select("*").limit(3).execute().data
+        
+        # Get unique kelas to see format
+        all_kehadiran = absensi_system.client.table("kehadiran").select("kelas").limit(100).execute().data
+        unique_kelas = list(set([item['kelas'] for item in all_kehadiran if item.get('kelas')]))
 
         return jsonify({
             "siswa_count": siswa_count,
@@ -322,9 +326,102 @@ def api_debug():
             "kehadiran_hari_ini_count": len(kehadiran_hari_ini),
             "sample_siswa": sample_siswa,
             "sample_kehadiran": sample_kehadiran,
-            "tanggal_hari_ini": tanggal_hari_ini
+            "tanggal_hari_ini": tanggal_hari_ini,
+            "unique_kelas_formats": unique_kelas
         })
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/kehadiran_by_jurusan')
+def api_kehadiran_by_jurusan():
+    """API untuk ambil data kehadiran per jurusan"""
+    try:
+        jurusan = request.args.get('jurusan', '').upper()
+        tanggal = request.args.get('tanggal')
+        limit = int(request.args.get('limit', 500))
+        
+        if not jurusan:
+            return jsonify({"error": "Parameter jurusan diperlukan"}), 400
+        
+        # Get all siswa for this jurusan
+        siswa_result = absensi_system.client.table(absensi_system.siswa_table).select("*").execute()
+        siswa_list = [s for s in siswa_result.data if jurusan in s.get('kelas', '').upper()]
+        
+        # Query kehadiran berdasarkan jurusan (dari kelas siswa)
+        query = absensi_system.client.table(absensi_system.kehadiran_table).select("*")
+        
+        # Filter tanggal jika ada
+        if tanggal:
+            query = query.gte("waktu_absen", f"{tanggal} 00:00:00").lte("waktu_absen", f"{tanggal} 23:59:59")
+        
+        result = query.order("waktu_absen", desc=True).limit(limit).execute()
+        
+        print(f"[DEBUG] Jurusan: {jurusan}, Total data fetched: {len(result.data)}")
+        
+        # Filter berdasarkan jurusan dari kelas (misalnya "TKL 1" -> "TKL" atau "SIJA 2" -> "SIJA")
+        # Coba berbagai format: "SIJA", "SIJA 1", "XI SIJA 1", dll
+        filtered_data = []
+        for item in result.data:
+            kelas = item.get('kelas', '').upper()
+            # Check if jurusan is in the kelas string
+            if jurusan in kelas or kelas.startswith(jurusan):
+                filtered_data.append(item)
+        
+        print(f"[DEBUG] Filtered data count: {len(filtered_data)}")
+        if len(filtered_data) > 0:
+            print(f"[DEBUG] Sample kelas: {filtered_data[0].get('kelas')}")
+        
+        return jsonify({
+            "kehadiran": filtered_data,
+            "siswa": siswa_list
+        })
+        
+    except Exception as e:
+        print(f"[ERROR] api_kehadiran_by_jurusan: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/live_kehadiran')
+def api_live_kehadiran():
+    """API untuk live kehadiran - data terbaru real-time"""
+    try:
+        limit = int(request.args.get('limit', 50))
+        
+        # Ambil data kehadiran terbaru
+        result = absensi_system.client.table(absensi_system.kehadiran_table) \
+            .select("*") \
+            .order("waktu_absen", desc=True) \
+            .limit(limit) \
+            .execute()
+        
+        return jsonify(result.data)
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/izin_siswa')
+def api_izin_siswa():
+    """API untuk ambil data pengajuan izin siswa"""
+    try:
+        # Cek apakah table izin ada, jika tidak gunakan kehadiran dengan status tertentu
+        # Untuk sementara kita gunakan kehadiran dengan status 'ditolak' atau tambah status 'izin'
+        
+        # Jika ada tabel izin terpisah:
+        # result = absensi_system.client.table("izin_siswa").select("*").order("created_at", desc=True).execute()
+        
+        # Untuk sementara gunakan data kehadiran dengan status ditolak sebagai contoh
+        result = absensi_system.client.table(absensi_system.kehadiran_table) \
+            .select("*") \
+            .eq("status", "ditolak") \
+            .order("waktu_absen", desc=True) \
+            .limit(20) \
+            .execute()
+        
+        return jsonify(result.data)
+        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

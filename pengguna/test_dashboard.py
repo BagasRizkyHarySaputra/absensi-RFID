@@ -14,7 +14,7 @@ import os
 
 # Get absolute path to parent directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')  # Static di folder pengguna
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), 'templates')
 
 app = Flask(__name__, 
@@ -296,5 +296,8 @@ if __name__ == '__main__':
     print("   - Potrait (9:16 atau height > width) → dashboard_potrait")
     print("   - Landscape (16:9 atau width >= height) → dashboard_landscape")
     print("=" * 60)
+    print("\n🌐 Server dapat diakses dari jaringan lokal!")
+    print("   Gunakan IP Address komputer ini untuk akses dari device lain")
+    print("=" * 60)
     
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0', port=5001, debug=True)

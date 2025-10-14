@@ -3,48 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Absensi Siswa</title>
+  <title>Dashboard Admin - Absensi RFID</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>🔧 Admin Panel Absensi</h1>
-      <p>Kelola status kehadiran siswa - {{ tanggal_hari_ini }}</p>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo-container">
+        <div class="logo"></div>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-page="jurusan">JURUSAN</button>
+        <button class="nav-btn" data-page="live">LIVE KEHADIRAN</button>
+        <button class="nav-btn" data-page="pengajuan">PENGAJUAN IZIN</button>
+      </nav>
     </div>
 
-    <div class="stats">
-      <div class="stat-card info">
-        <h3>Total Absensi Hari Ini</h3>
-        <div class="number">{{ stats_hari_ini.total }}</div>
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header with Search and Settings -->
+      <div class="header">
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder='Search for "nama" "nis/nisn" "jurusan"'>
+          <button class="search-btn">🔍</button>
+        </div>
+        <button class="settings-btn">⚙️</button>
       </div>
 
-      <div class="stat-card success">
-        <h3>Siswa Hadir</h3>
-        <div class="number">{{ stats_hari_ini.hadir }}</div>
+      <!-- Page: Jurusan -->
+      <div class="page-content" id="jurusan-page">
+        <div class="jurusan-grid">
+          <button class="jurusan-card" data-jurusan="TKL">TKL</button>
+          <button class="jurusan-card" data-jurusan="SIJA">SIJA</button>
+          <button class="jurusan-card" data-jurusan="TKP">TKP</button>
+          <button class="jurusan-card" data-jurusan="TPFL">TPFL</button>
+          <button class="jurusan-card" data-jurusan="TE">TE</button>
+          <button class="jurusan-card" data-jurusan="TO">TO</button>
+          <button class="jurusan-card" data-jurusan="KBPS">KBPS</button>
+        </div>
       </div>
 
-      <div class="stat-card danger">
-        <h3>Ditolak</h3>
-        <div class="number">{{ stats_hari_ini.ditolak }}</div>
+      <!-- Page: Live Kehadiran -->
+      <div class="page-content hidden" id="live-page">
+        <div class="live-container">
+          <h2>Live Request Presensi<br>(disetujui, ditolak, gagal, dan berhasil)</h2>
+        </div>
       </div>
 
-      <div class="stat-card info">
-        <h3>Persentase Hadir</h3>
-        <div class="number">{{ stats_hari_ini.persentase_hadir }}%</div>
+      <!-- Page: Pengajuan Izin -->
+      <div class="page-content hidden" id="pengajuan-page">
+        <div class="pengajuan-container">
+          <div class="izin-section">
+            <h3>- IZIN SISWA -</h3>
+            <div class="izin-list" id="izinList">
+              <!-- Daftar izin siswa akan ditampilkan di sini -->
+            </div>
+          </div>
+          <div class="alasan-section">
+            <div class="photo-placeholder">
+              <div class="cloud"></div>
+            </div>
+            <div class="alasan-box">
+              <h4>Alasan Izin:</h4>
+              <p id="alasanText">Pilih siswa untuk melihat alasan izin</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Craetor: Kelompok 3</p>
       </div>
     </div>
+  </div>
 
-    <div class="content">
-      <div id="alert" class="alert"></div>
+  <!-- Modal Pop-up untuk Data Kelas -->
+  <div id="kelasModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Data Presensi Kelas</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="calendar-container" id="calendarContainer">
+          <!-- Calendar akan diisi oleh JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <div class="section">
-        <h2>🛠️ Kelola Kehadiran Hari Ini</h2>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Waktu</th>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
                 <th>Nama</th>
                 <th>NIS</th>
                 <th>Kelas</th>
