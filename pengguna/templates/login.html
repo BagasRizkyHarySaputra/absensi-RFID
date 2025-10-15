@@ -82,11 +82,18 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
 
-        // Animasi saat submit
+        // Animasi saat submit - JANGAN preventDefault!
         document.querySelector('.login-form').addEventListener('submit', function(e) {
+            // Jangan e.preventDefault() - biarkan form submit normal
             const button = this.querySelector('.login-button');
             button.style.transform = 'scale(0.95)';
             button.style.opacity = '0.8';
+            button.disabled = true; // Disable button untuk prevent double submit
+            
+            console.log('Form submitting...');
+            console.log('Nama:', document.getElementById('nama').value);
+            console.log('NIS:', document.getElementById('nis').value);
+            // Form akan submit otomatis karena tidak ada preventDefault
         });
     </script>
 </body>

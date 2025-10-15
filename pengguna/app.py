@@ -162,12 +162,15 @@ def format_history(history_data):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Route untuk login"""
+    print(f"[DEBUG] /login route called - Method: {request.method}")
+    
     if request.method == 'POST':
+        print(f"[DEBUG] POST request received - Form data: {request.form}")
         nama = request.form.get('nama', '').strip()
         nis = request.form.get('nis', '').strip()
         
         # Debug logging
-        print(f"[DEBUG] Login attempt - Nama: {nama}, NIS: {nis}")
+        print(f"[DEBUG] Login attempt - Nama: '{nama}', NIS: '{nis}'")
         
         # Validasi input
         if not nama or not nis:
