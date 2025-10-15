@@ -11,6 +11,10 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, s
 from database import get_supabase_client
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Get absolute path to parent directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,8 +25,8 @@ app = Flask(__name__,
             template_folder=TEMPLATE_DIR,
             static_folder=STATIC_DIR)
 
-# Secret key untuk session
-app.secret_key = 'your-secret-key-here-change-in-production'
+# Secret key untuk session - gunakan environment variable
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 # Konfigurasi untuk testing
 TEST_NIS = "244119927"  # NIS: Hurrcane, XI SIJA 2
