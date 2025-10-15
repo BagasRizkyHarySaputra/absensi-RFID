@@ -43,6 +43,7 @@ def validate_login(nama, nis):
         Siswa data jika valid, None jika tidak valid
     """
     try:
+        print(f"[DEBUG] validate_login called - nama: {nama}, nis: {nis}")
         client = get_supabase_client()
         
         # Ambil semua siswa dengan NIS yang cocok
@@ -51,20 +52,30 @@ def validate_login(nama, nis):
             .eq("nis", nis)\
             .execute()
         
+        print(f"[DEBUG] Supabase query result: {result.data}")
+        
         if not result.data:
+            print("[DEBUG] No data found for NIS")
             return None
         
         # Cek apakah ada siswa dengan nama yang cocok (case-insensitive)
         nama_upper = nama.strip().upper()
+        print(f"[DEBUG] Searching for nama_upper: {nama_upper}")
+        
         for siswa in result.data:
             siswa_nama_upper = siswa['nama'].strip().upper()
+            print(f"[DEBUG] Comparing with: {siswa_nama_upper}")
             if siswa_nama_upper == nama_upper:
+                print(f"[DEBUG] Match found! Returning siswa: {siswa}")
                 return siswa
         
+        print("[DEBUG] No matching nama found")
         return None
     
     except Exception as e:
-        print(f"Error validate login: {e}")
+        print(f"[ERROR] validate_login exception: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 def get_siswa_data(nis):
@@ -155,14 +166,19 @@ def login():
         nama = request.form.get('nama', '').strip()
         nis = request.form.get('nis', '').strip()
         
+        # Debug logging
+        print(f"[DEBUG] Login attempt - Nama: {nama}, NIS: {nis}")
+        
         # Validasi input
         if not nama or not nis:
+            print("[DEBUG] Login failed - Empty nama or NIS")
             return render_template('login.html', error='Nama dan NIS harus diisi!')
         
         # Validasi dengan database
         siswa = validate_login(nama, nis)
         
         if siswa:
+            print(f"[DEBUG] Login success - Siswa: {siswa}")
             # Simpan data siswa ke session
             session['siswa_id'] = siswa['id']
             session['nama'] = siswa['nama']
@@ -171,6 +187,7 @@ def login():
             
             return redirect(url_for('dashboard'))
         else:
+            print(f"[DEBUG] Login failed - validate_login returned None")
             return render_template('login.html', error='Nama atau NIS tidak cocok! Pastikan data yang Anda masukkan benar.')
     
     # GET request - tampilkan form login
