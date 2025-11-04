@@ -1,0 +1,409 @@
+/* Pengajuan page styles matching the mock */
+
+.pengajuan-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+.tab-btn:hover {
+  color: #2563eb;
+}
+
+/* Alert Messages */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+}
+
+/* Form Styling */
+.pengajuan-form {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.form-field { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.5rem; 
+}
+
+.field-label {
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: 0.02em;
+}
+
+/* Upload Button */
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.upload-btn:hover {
+  border-color: #2563eb;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+}
+
+.upload-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-icon {
+  color: #6b7280;
+}
+
+.upload-text {
+  color: #111827;
+  font-weight: 500;
+}
+
+.file-info {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Submit Button */
+.submit-section {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* History Section */
+.pengajuan-history {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.history-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.history-date {
+  color: #111827;
+}
+
+.history-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-approved {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-field strong {
+  color: #374151;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.history-field p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.history-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.history-meta small {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.history-file a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.history-file a:hover {
+  text-decoration: underline;
+}
+
+.pill-input {
+  width: 100%;
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.9rem 1.1rem;
+  font-family: var(--font-poppins, 'Poppins'), Arial, sans-serif;
+  font-size: 0.95rem;
+  color: #111827;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.pill-input::placeholder { color: #9ca3af; }
+
+.pill-textarea {
+  width: 100%;
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 0.9rem 1.1rem;
+  font-family: var(--font-poppins, 'Poppins'), Arial, sans-serif;
+  font-size: 0.95rem;
+  color: #111827;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.pill-textarea::placeholder { color: #9ca3af; }
+
+.keterangan-field,
+.alasan-field,
+.spaced-block {
+  padding-inline: 4rem; /* doubled spacing as requested */
+}
+
+.evidence-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.camera-btn {
+  width: 72px;
+  height: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: 1px solid rgba(17,24,39,0.06);
+  background: linear-gradient(180deg, #e2e8f0 0%, #e7ecff 100%);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  cursor: pointer;
+}
+.camera-icon { width: 28px; height: 28px; color: #4b5563; }
+
+.file-hidden { display: none; }
+.file-name { margin-top: 0.5rem; color: #6b7280; font-size: 0.9rem; }
+
+.submit-btn-lg {
+  width: 100%;
+  border: none;
+  color: white;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #6d83f2 0%, #7d5fe0 50%, #8e5fc9 100%);
+  box-shadow: 0 18px 36px rgba(109,131,242,0.35);
+  cursor: pointer;
+}
+.submit-btn-lg:hover { filter: brightness(1.03); }
+
+/* Segmented date input */
+.seg-date-wrap { position: relative; display: inline-block; width: 100%; }
+.seg-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  cursor: default;
+}
+.seg-date .seg {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: #111827;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  padding: 0.1rem 0.25rem;
+  border-radius: 8px;
+}
+.seg-date .seg:hover, .seg-date .seg.open { background: #f3f4f6; }
+.seg-date .sep { color: #9ca3af; font-weight: 600; }
+
+.seg-menu {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  min-width: 100%;
+  background: #fff;
+  border: 1px solid rgba(17,24,39,0.08);
+  border-radius: 12px;
+  box-shadow: 0 22px 48px -16px rgba(15, 23, 42, 0.22), 0 8px 20px rgba(16,24,40,0.08);
+  padding: 0.5rem;
+  z-index: 40;
+}
+.seg-menu.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+.seg-menu.months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem; }
+.seg-menu.years { max-height: 220px; overflow: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
+.seg-menu .opt {
+  appearance: none; border: 1px solid #e5e7eb; background: #f9fafb; color: #111827;
+  border-radius: 8px; padding: 0.4rem 0.5rem; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+}
+.seg-menu .opt:hover { background: #eef2ff; border-color: #c7d2fe; }
+.seg-menu .opt.active { background: #e0e7ff; border-color: #a5b4fc; }
+.seg-menu .opt .opt-sub { color: #6b7280; font-weight: 500; margin-left: 0.25rem; }
+
+@media (max-width: 768px) {
+  .dates-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .keterangan-field,
+  .alasan-field,
+  .spaced-block { padding-inline: 2rem; }
+  .seg-menu.years { grid-template-columns: repeat(3, 1fr); }
+}

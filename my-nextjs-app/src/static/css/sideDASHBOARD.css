@@ -1,0 +1,602 @@
+/* Sidebar Dashboard Styles */
+
+/* CSS Custom Properties untuk mudah mengatur margin sidebar-nav */
+:root {
+  /* PENGATURAN BACKGROUND SIDEBAR */
+  --sidebar-background: #fff6ef; /* Background utama sidebar */
+  
+  /* PENGATURAN LOGO */
+  --logo-filter: brightness(0) invert(1); /* Default: white logo */
+  /* Alternative logo filters:
+     - none (original colors)
+     - brightness(0) invert(1) (white)
+     - hue-rotate(180deg) brightness(1.2) (color adjustment)
+  */
+  
+  /* PENGATURAN ICON NAVIGATION */
+  --nav-icon-normal: brightness(0) saturate(100%) invert(50%) sepia(18%) saturate(1295%) hue-rotate(245deg) brightness(89%) contrast(88%); /* Purple color */
+  --nav-icon-active: brightness(0) invert(1); /* White for active */
+  /* Alternative icon filters:
+     - none (original SVG colors)
+     - brightness(0) invert(1) (white)
+     - brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%) (red)
+     - brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%) (green)
+  */
+  
+  /* PENGATURAN MARGIN KANAN-KIRI SIDEBAR NAV */
+  --sidebar-nav-margin-horizontal: 1rem; /* Nilai default: 1rem */
+  /* Contoh nilai lain:
+     - 0.5rem (lebih sempit)
+     - 1.5rem (lebih lebar)
+     - 2rem (sangat lebar)
+  */
+  
+  /* PENGATURAN MARGIN ATAS-BAWAH SIDEBAR NAV */
+  --sidebar-nav-margin-vertical: 0.5rem; /* Nilai default: 0.25rem */
+  /* Contoh nilai lain:
+     - 0.125rem (lebih rapat)
+     - 0.5rem (lebih longgar)
+  */
+  
+  /* PENGATURAN BORDER RADIUS */
+  --sidebar-nav-border-radius: 12px; /* Nilai default: 12px */
+  /* Contoh nilai lain:
+     - 8px (lebih kotak)
+     - 16px (lebih bulat)
+     - 20px (sangat bulat)
+  */
+  
+  /* PENGATURAN PADDING DALAM */
+  --sidebar-nav-padding-horizontal: 1.5rem; /* Padding kanan-kiri dalam */
+  --sidebar-nav-padding-vertical: 1rem; /* Padding atas-bawah dalam */
+  
+  /* PENGATURAN LOGOUT BUTTON */
+  --logout-btn-color: #fca5a5; /* Warna normal logout button */
+  --logout-btn-hover-color: #ef4444; /* Warna hover logout button */
+  --logout-btn-hover-bg: rgba(239, 68, 68, 0.1); /* Background hover logout button */
+}
+
+/* Mobile Toggle Button */
+.sidebar-mobile-toggle {
+  position: fixed;
+  top: 1rem; /* Kembali ke posisi normal */
+  left: 1rem;
+  z-index: 1001;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.sidebar-mobile-toggle:hover {
+  background: #5a67d8;
+  transform: scale(1.05);
+}
+
+/* Sidebar Overlay for Mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Main Sidebar Container */
+.sidebar {
+  position: fixed;
+  top: 0; /* Kembali ke pojok atas */
+  left: 0;
+  width: 310px; /* Ubah nilai ini untuk mengatur lebar sidebar */
+  height: 100vh; /* Tinggi penuh sampai pojok bawah */
+  background: var(--sidebar-background); /* Background menggunakan CSS variable */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 4rem 1.5rem 1.5rem 1.5rem; /* Padding atas lebih besar untuk jarak dari pojok */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-logo {
+  flex: 1;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #f2efec 0%, #b2c8e4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(178, 200, 228, 0.3);
+  overflow: hidden; /* Ensure logo fits within circle */
+  transition: all 0.3s ease;
+  cursor: pointer; /* Make it look clickable */
+}
+
+.logo-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(178, 200, 228, 0.4);
+}
+
+.logo-placeholder {
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Logo Image Styling */
+.logo-image {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Removed filter to show original logo colors */
+  transition: all 0.3s ease;
+}
+
+/* Alternative logo styling - uncomment if needed */
+/*
+.logo-image img {
+  filter: none; // Use original colors
+}
+*/
+
+/*
+.logo-image img {
+  filter: brightness(0) invert(1); // Force white
+}
+*/
+
+/*
+.logo-image img {
+  filter: hue-rotate(180deg) brightness(1.2); // Color adjustment
+}
+*/
+
+.logo-text h1 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3a285a;
+  margin: 0 0 0.15rem 0;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.2;
+}
+
+.logo-text p {
+  font-size: 1rem; /* Sama dengan ukuran h1 (Presensi) */
+  color: #3a285a;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.sidebar-close-btn {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(107, 114, 128, 0.1);
+  color: #374151;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0.25rem 0;
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: var(--sidebar-nav-padding-vertical) var(--sidebar-nav-padding-horizontal);
+  color: #7e6f9c; /* Warna text sebelum diklik */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border: none;
+  background: none;
+  width: calc(100% - (var(--sidebar-nav-margin-horizontal) * 2)); /* Lebar penuh minus margin kanan-kiri */
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--sidebar-nav-border-radius);
+  margin: var(--sidebar-nav-margin-vertical) var(--sidebar-nav-margin-horizontal);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #2d3748;
+  transform: translateX(5px);
+}
+
+.sidebar-nav-link.active {
+  background: linear-gradient(90deg, #4b6985 0%, #ffffff 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(75, 105, 133, 0.3);
+}
+
+.sidebar-nav-link.active .nav-icon {
+  color: white;
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7e6f9c; /* Warna icon sama dengan text */
+  transition: color 0.3s ease;
+}
+
+/* Custom SVG Icon Styling */
+.nav-icon img {
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+  /* Filter menggunakan CSS variable untuk mudah dikustomisasi */
+  filter: var(--nav-icon-normal);
+}
+
+/* Icon styling when nav item is active */
+.sidebar-nav-link.active .nav-icon img {
+  filter: var(--nav-icon-active);
+}
+
+/* Icon hover effect */
+.sidebar-nav-link:hover .nav-icon img {
+  transform: scale(1.1);
+  filter: var(--nav-icon-normal);
+}
+
+/* Active hover effect */
+.sidebar-nav-link.active:hover .nav-icon img {
+  filter: var(--nav-icon-active);
+}
+
+.nav-text {
+  font-family: 'Poppins', sans-serif;
+  flex: 1;
+}
+
+.nav-indicator {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 30px;
+  background: white;
+  border-radius: 2px 0 0 2px;
+}
+
+/* ===== SIDEBAR FOOTER & LOGOUT BUTTON ===== */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto; /* Push footer to bottom */
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--logout-btn-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logout-btn:hover {
+  background: var(--logout-btn-hover-bg);
+  border-color: var(--logout-btn-hover-color);
+  color: var(--logout-btn-hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+.logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.logout-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 0.25rem 0;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.sidebar-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-actions .action-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #6b7280;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebar-actions .action-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* Navigation Badge */
+.nav-badge {
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+  display: none;
+}
+
+/* Responsive States */
+.sidebar.mobile-hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar.mobile-visible {
+  transform: translateX(0);
+}
+
+.sidebar.desktop-visible {
+  transform: translateX(0);
+}
+
+.sidebar.desktop-hidden {
+  transform: translateX(-300px); /* Sesuaikan dengan lebar sidebar */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    top: 0; /* Di mobile, kembali ke posisi normal */
+    height: 100vh; /* Tinggi penuh di mobile */
+    transform: translateX(-100%);
+    border-radius: 0; /* Hilangkan border radius di mobile */
+  }
+  
+  .sidebar.mobile-visible {
+    transform: translateX(0);
+  }
+  
+  .sidebar-nav-link {
+    padding: var(--sidebar-nav-padding-vertical) var(--sidebar-nav-padding-horizontal);
+    margin: var(--sidebar-nav-margin-vertical) var(--sidebar-nav-margin-horizontal);
+    border-radius: var(--sidebar-nav-border-radius);
+    width: calc(100% - (var(--sidebar-nav-margin-horizontal) * 2));
+  }
+  
+  .sidebar-header {
+    padding: 2rem 1rem 1.5rem 1rem; /* Padding atas juga di mobile untuk jarak dari pojok */
+  }
+  
+  .sidebar-footer {
+    padding: 1rem;
+  }
+  
+  .logout-btn {
+    padding: 0.875rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .sidebar-mobile-toggle {
+    top: 1rem; /* Kembali ke posisi normal di mobile */
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar-mobile-toggle {
+    display: none;
+  }
+  
+  .sidebar-overlay {
+    display: none;
+  }
+}
+
+/* Smooth Animations */
+.sidebar * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover Effects */
+.sidebar-nav-link:hover .nav-icon,
+.sidebar-nav-link.active .nav-icon {
+  transform: scale(1.1);
+}
+
+/* Focus States for Accessibility */
+.sidebar-nav-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.sidebar-mobile-toggle:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar for Navigation */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== CUSTOMIZATION GUIDE ===== */
+/*
+  CARA MENGGUNAKAN KUSTOMISASI CSS VARIABLES:
+  
+  1. UNTUK MENGUBAH WARNA ICON NAVIGATION:
+     Edit nilai --nav-icon-normal dan --nav-icon-active di :root
+     
+     Contoh filter warna populer:
+     - Merah: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)
+     - Hijau: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)
+     - Biru: brightness(0) saturate(100%) invert(26%) sepia(100%) saturate(2500%) hue-rotate(201deg) brightness(102%) contrast(98%)
+     - Orange: brightness(0) saturate(100%) invert(55%) sepia(92%) saturate(1115%) hue-rotate(359deg) brightness(103%) contrast(103%)
+     - Putih: brightness(0) invert(1)
+     - Hitam: brightness(0)
+     - Asli: none (menggunakan warna asli SVG)
+  
+  2. UNTUK MENGUBAH SPACING SIDEBAR NAV:
+     Edit nilai --sidebar-nav-margin-horizontal dan --sidebar-nav-margin-vertical
+     
+  3. UNTUK MENGUBAH BENTUK BORDER:
+     Edit nilai --sidebar-nav-border-radius
+     
+  4. UNTUK MENGUBAH PADDING DALAM:
+     Edit nilai --sidebar-nav-padding-horizontal dan --sidebar-nav-padding-vertical
+     
+  5. UNTUK MENGUBAH BACKGROUND SIDEBAR:
+     Edit nilai --sidebar-background
+     
+  6. UNTUK MENGUBAH LOGO COLOR:
+     Edit nilai --logo-filter
+     
+  7. UNTUK MENGUBAH WARNA LOGOUT BUTTON:
+     Edit nilai --logout-btn-color (warna normal)
+     Edit nilai --logout-btn-hover-color (warna hover)
+     Edit nilai --logout-btn-hover-bg (background hover)
+     
+  Semua pengaturan ada di bagian :root di atas file ini!
+*/

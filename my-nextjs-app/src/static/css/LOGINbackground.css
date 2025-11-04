@@ -1,0 +1,215 @@
+/* Background styles with gradient ellipses */
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.gradient-ellipse {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.ellipse-pink {
+  width: 400px;
+  height: 300px;
+  background: rgba(236, 72, 153, 0.3); /* Pink with transparency */
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.ellipse-blue {
+  width: 350px;
+  height: 450px;
+  background: rgba(59, 130, 246, 0.25); /* Blue with transparency */
+  top: 40%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.ellipse-purple {
+  width: 300px;
+  height: 300px;
+  background: rgba(147, 51, 234, 0.2); /* Purple with transparency */
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+.ellipse-cyan {
+  width: 250px;
+  height: 350px;
+  background: rgba(6, 182, 212, 0.2); /* Cyan with transparency */
+  top: 10%;
+  right: 30%;
+  animation-delay: 6s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-10px) scale(0.95);
+    opacity: 0.35;
+  }
+  75% {
+    transform: translateY(-30px) scale(1.1);
+    opacity: 0.45;
+  }
+}
+
+/* Additional floating animation for different ellipses */
+.ellipse-blue {
+  animation: floatReverse 10s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.ellipse-purple {
+  animation: floatSlow 12s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.ellipse-cyan {
+  animation: floatFast 6s ease-in-out infinite;
+  animation-delay: 5s;
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.25;
+  }
+  33% {
+    transform: translateY(15px) translateX(-10px) scale(1.08);
+    opacity: 0.35;
+  }
+  66% {
+    transform: translateY(-25px) translateX(15px) scale(0.92);
+    opacity: 0.3;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-40px) rotate(180deg) scale(1.15);
+    opacity: 0.35;
+  }
+}
+
+@keyframes floatFast {
+  0%, 100% {
+    transform: translateX(0px) scale(1);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translateX(20px) scale(1.1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(-15px) scale(0.9);
+    opacity: 0.25;
+  }
+  75% {
+    transform: translateX(25px) scale(1.05);
+    opacity: 0.35;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ellipse-pink {
+    width: 300px;
+    height: 250px;
+    top: 15%;
+    left: 5%;
+  }
+  
+  .ellipse-blue {
+    width: 280px;
+    height: 350px;
+    top: 35%;
+    right: 10%;
+  }
+  
+  .ellipse-purple {
+    width: 200px;
+    height: 200px;
+    bottom: 15%;
+    left: 15%;
+  }
+  
+  .ellipse-cyan {
+    width: 180px;
+    height: 250px;
+    top: 5%;
+    right: 25%;
+  }
+}
+
+@media (max-width: 480px) {
+  .gradient-ellipse {
+    filter: blur(40px);
+  }
+  
+  .ellipse-pink {
+    width: 200px;
+    height: 180px;
+  }
+  
+  .ellipse-blue {
+    width: 190px;
+    height: 250px;
+  }
+  
+  .ellipse-purple {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .ellipse-cyan {
+    width: 130px;
+    height: 180px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .background-container {
+    background: #f8fafc;
+  }
+  
+  .ellipse-pink {
+    background: rgba(236, 72, 153, 0.25);
+  }
+  
+  .ellipse-blue {
+    background: rgba(59, 130, 246, 0.2);
+  }
+  
+  .ellipse-purple {
+    background: rgba(147, 51, 234, 0.18);
+  }
+  
+  .ellipse-cyan {
+    background: rgba(6, 182, 212, 0.18);
+  }
+}

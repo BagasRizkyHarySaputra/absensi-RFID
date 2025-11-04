@@ -1,0 +1,312 @@
+/* Dashboard Background Styles */
+
+/* Main Background Container */
+.dashboard-background {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  isolation: isolate; /* Create stacking context */
+}
+
+/* Background Base Layer */
+.background-base {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff6ef; /* Base background color */
+  z-index: -10;
+}
+
+/* Background Shapes Container */
+.background-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -9;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Main Ellipse Shape - Right Side */
+.ellipse-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Increased blur for smoother gradient */
+  opacity: 0.8; /* Increased opacity for more visibility */
+  animation: floatAnimation 15s ease-in-out infinite;
+}
+
+.main-ellipse {
+  width: 1200px; /* Significantly larger */
+  height: 900px; /* Significantly larger */
+  background: radial-gradient(
+    ellipse at center,
+    #f4d4f3 0%,
+    rgba(244, 212, 243, 0.9) 20%, /* More visible gradation */
+    rgba(244, 212, 243, 0.7) 40%,
+    rgba(244, 212, 243, 0.5) 60%,
+    rgba(244, 212, 243, 0.2) 80%,
+    transparent 100%
+  );
+  top: 5%; /* Adjusted position */
+  right: -300px; /* Positioned towards right */
+  animation-delay: 0s;
+}
+
+/* Extra Large Background Ellipse for dramatic effect */
+.mega-ellipse {
+  width: 1600px; /* Very large */
+  height: 1200px; /* Very large */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(244, 212, 243, 0.3) 0%,
+    rgba(244, 212, 243, 0.2) 30%,
+    rgba(244, 212, 243, 0.1) 60%,
+    transparent 90%
+  );
+  top: -10%;
+  right: -400px;
+  animation-delay: -15s;
+  animation-duration: 30s;
+  z-index: -1; /* Behind other ellipses */
+}
+
+/* Secondary Ellipse Shapes for Depth */
+.secondary-ellipse-1 {
+  width: 900px; /* Larger size */
+  height: 600px; /* Larger size */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(244, 212, 243, 0.7) 0%, /* More visible */
+    rgba(244, 212, 243, 0.5) 30%,
+    rgba(244, 212, 243, 0.3) 60%,
+    transparent 80%
+  );
+  top: 30%;
+  right: -200px; /* Adjusted position */
+  animation-delay: -3s;
+  animation-duration: 20s;
+}
+
+.secondary-ellipse-2 {
+  width: 750px; /* Larger size */
+  height: 500px; /* Larger size */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(244, 212, 243, 0.6) 0%, /* More visible */
+    rgba(244, 212, 243, 0.4) 40%,
+    rgba(244, 212, 243, 0.2) 70%,
+    transparent 90%
+  );
+  top: 55%;
+  right: -150px; /* Adjusted position */
+  animation-delay: -6s;
+  animation-duration: 25s;
+}
+
+/* Accent Ellipse Shapes */
+.accent-ellipse-1 {
+  width: 500px; /* Larger size */
+  height: 350px; /* Larger size */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(244, 212, 243, 0.5) 0%, /* More visible */
+    rgba(244, 212, 243, 0.3) 50%,
+    rgba(244, 212, 243, 0.15) 80%,
+    transparent 100%
+  );
+  top: 15%;
+  right: 50px; /* Adjusted position */
+  animation-delay: -9s;
+  animation-duration: 18s;
+}
+
+.accent-ellipse-2 {
+  width: 600px; /* Larger size */
+  height: 400px; /* Larger size */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(244, 212, 243, 0.4) 0%, /* More visible */
+    rgba(244, 212, 243, 0.25) 40%,
+    rgba(244, 212, 243, 0.1) 70%,
+    transparent 95%
+  );
+  top: 75%;
+  right: 100px; /* Adjusted position */
+  animation-delay: -12s;
+  animation-duration: 22s;
+}
+
+/* Background Overlay for Smooth Blending */
+.background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 246, 239, 0.2) 0%,
+    transparent 40%,
+    rgba(244, 212, 243, 0.1) 80%,
+    rgba(244, 212, 243, 0.15) 100%
+  );
+  z-index: -8;
+  pointer-events: none;
+}
+
+/* Content Container */
+.background-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Floating Animation */
+@keyframes floatAnimation {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.02);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px) scale(0.98);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-30px) translateX(15px) scale(1.01);
+    opacity: 0.65;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .mega-ellipse {
+    width: 1200px;
+    height: 900px;
+    right: -300px;
+  }
+  
+  .main-ellipse {
+    width: 900px;
+    height: 675px;
+    right: -225px;
+  }
+  
+  .secondary-ellipse-1 {
+    width: 675px;
+    height: 450px;
+    right: -150px;
+  }
+  
+  .secondary-ellipse-2 {
+    width: 550px;
+    height: 375px;
+    right: -100px;
+  }
+  
+  .accent-ellipse-1 {
+    width: 375px;
+    height: 260px;
+    right: 25px;
+  }
+  
+  .accent-ellipse-2 {
+    width: 450px;
+    height: 300px;
+    right: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ellipse-shape {
+    filter: blur(60px); /* Reduce blur for mobile */
+  }
+  
+  .mega-ellipse {
+    width: 800px;
+    height: 600px;
+    right: -200px;
+  }
+  
+  .main-ellipse {
+    width: 600px;
+    height: 450px;
+    right: -150px;
+  }
+  
+  .secondary-ellipse-1 {
+    width: 450px;
+    height: 300px;
+    right: -100px;
+  }
+  
+  .secondary-ellipse-2 {
+    width: 375px;
+    height: 250px;
+    right: -75px;
+  }
+  
+  .accent-ellipse-1,
+  .accent-ellipse-2 {
+    display: none; /* Hide accent shapes on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .ellipse-shape {
+    filter: blur(40px);
+  }
+  
+  .mega-ellipse {
+    width: 500px;
+    height: 375px;
+    right: -125px;
+  }
+  
+  .main-ellipse {
+    width: 400px;
+    height: 300px;
+    right: -100px;
+  }
+  
+  .secondary-ellipse-1 {
+    width: 300px;
+    height: 225px;
+    right: -75px;
+  }
+  
+  .secondary-ellipse-2 {
+    width: 250px;
+    height: 150px;
+    right: -50px;
+  }
+}
+
+/* Additional Effects */
+.background-shapes::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%; /* Increased coverage */
+  height: 100%;
+  background: linear-gradient(
+    270deg,
+    rgba(244, 212, 243, 0.2) 0%, /* More visible */
+    rgba(244, 212, 243, 0.1) 30%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Prevent content overflow */
+.dashboard-background {
+  overflow-x: hidden;
+}

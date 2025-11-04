@@ -1,0 +1,103 @@
+/* Kelas page styles */
+
+.kelas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-inline: 2rem; /* keep content away from edges */
+}
+
+.kelas-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,250,252,0.96) 100%);
+  border-radius: 1.25rem;
+  box-shadow: 0 30px 60px -22px rgba(15, 23, 42, 0.18), 0 8px 20px rgba(16,24,40,0.08);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  padding: 1rem 1rem 0.75rem;
+}
+
+.kelas-header {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 800;
+  color: #1f2937;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.75rem 0;
+}
+
+.kelas-list-scroll {
+  max-height: 440px; /* allow internal scroll to see all 12 lessons */
+  overflow: auto;
+  padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+}
+
+/* Hide scrollbar by default; show only WHILE scrolling */
+.kelas-list-scroll::-webkit-scrollbar { width: 0px; height: 0px; background: transparent; }
+.kelas-list-scroll.scrolling::-webkit-scrollbar { width: 10px; height: 10px; }
+.kelas-list-scroll.scrolling::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.5); border-radius: 999px; }
+.kelas-list-scroll.scrolling::-webkit-scrollbar-track { background: rgba(226,232,240,0.6); border-radius: 999px; }
+/* Firefox */
+.kelas-list-scroll { scrollbar-width: none; }
+.kelas-list-scroll.scrolling { scrollbar-width: thin; }
+
+.kelas-item {
+  display: grid;
+  /* Make the middle (time) column a consistent width so times align perfectly */
+  grid-template-columns: 1fr minmax(160px, 220px) 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  background: #ece9f6;
+  border-radius: 18px;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 0.9rem;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.kelas-item .subject { font-weight: 700; color: #111827; }
+/* Keep teacher column neatly aligned on the right side */
+.kelas-item .teacher { color: #111827; font-weight: 700; justify-self: end; }
+/* Center the time text and use tabular numbers for equal digit widths */
+.kelas-item .time { color: #6b7280; font-weight: 600; text-align: center; justify-self: center; font-variant-numeric: tabular-nums; }
+.kelas-item:focus, .kelas-item:focus-within { outline: none; }
+.kelas-item.active {
+  /* Remove thick blue outline; use subtle border + soft glow instead */
+  outline: none;
+  border-color: #c7d2fe; /* indigo-200 */
+  background: #f5f7ff;
+  box-shadow: 0 10px 24px rgba(79,70,229,0.12), 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* Realtime slot highlight */
+.kelas-item.current {
+  position: relative;
+  background: #ffffff;
+  border-color: #a5b4fc; /* indigo-300 */
+  box-shadow: 0 20px 40px rgba(79,70,229,0.18), 0 8px 20px rgba(0,0,0,0.06);
+}
+.kelas-item.current::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 6px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #6366f1 0%, #a855f7 100%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kelas-item.current { transition: background-color .2s ease, box-shadow .2s ease, border-color .2s ease; }
+}
+
+.kelas-footer { display: flex; align-items: center; justify-content: center; padding: 0.75rem 0.5rem; }
+.pagination { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem; background: #eef2ff; border-radius: 999px; }
+.page-btn { appearance: none; border: none; background: transparent; color: #4b5563; font-weight: 600; border-radius: 999px; padding: 0.5rem 0.75rem; cursor: pointer; }
+.page-btn:hover { background: rgba(255,255,255,0.8); }
+.page-btn.active { background: #4f46e5; color: white; }
+.page-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kelas-container { padding-inline: 1rem; }
+  .kelas-list-scroll { max-height: 360px; }
+  /* Slightly relax the min width for time column on small screens */
+  .kelas-item { grid-template-columns: 1fr minmax(140px, 200px) 1fr; }
+}

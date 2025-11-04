@@ -1,0 +1,233 @@
+/* Header styles matching the mock */
+
+/* CSS Custom Properties untuk Header Icons */
+:root {
+  /* PENGATURAN WARNA HEADER ICONS */
+  --header-icon-normal: brightness(0) saturate(100%) invert(38%) sepia(25%) saturate(1295%) hue-rotate(245deg) brightness(89%) contrast(88%);
+  --header-icon-hover: brightness(0) saturate(100%) invert(38%) sepia(25%) saturate(1295%) hue-rotate(245deg) brightness(99%) contrast(98%);
+  --header-user-icon: brightness(0) saturate(100%) invert(35%) sepia(18%) saturate(1295%) hue-rotate(245deg) brightness(89%) contrast(88%);
+  
+  /* Alternative color filters:
+     - Putih: brightness(0) invert(1)
+     - Hitam: brightness(0)
+     - Merah: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)
+     - Hijau: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)
+     - Biru: brightness(0) saturate(100%) invert(26%) sepia(100%) saturate(2500%) hue-rotate(201deg) brightness(102%) contrast(98%)
+     - Orange: brightness(0) saturate(100%) invert(55%) sepia(92%) saturate(1115%) hue-rotate(359deg) brightness(103%) contrast(103%)
+     - Asli: none (menggunakan warna asli SVG)
+  */
+}
+
+.app-page-header {
+	background: transparent;
+	margin: 0 0 1.25rem 0;
+}
+
+.top-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.welcome-row {
+	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+	font-weight: 800;
+	font-size: 1.1rem;
+	display: flex;
+	align-items: baseline;
+	gap: 0.35rem;
+}
+
+.welcome-prefix {
+	color: #6b7280;
+}
+
+.welcome-name {
+	background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	color: transparent;
+}
+
+.welcome-suffix {
+	color: #111827;
+	font-weight: 800;
+}
+
+.title-row {
+	margin-top: 0.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.title-accent {
+	width: 6px;
+	height: 28px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+	display: inline-block;
+}
+
+.title-text {
+	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+	font-size: 2.25rem;
+	font-weight: 700;
+	color: #111827;
+	margin: 0;
+}
+
+/* Right-side minimal actions like the mock */
+.header-actions-minimal {
+	display: flex;
+	align-items: center;
+	gap: 1.30rem; /* add a bit more spacing between bell and admin label */
+	position: relative; /* anchor for popover */
+}
+
+.icon-btn {
+	appearance: none;
+	border: none;
+	background: transparent; /* remove button background */
+	border-radius: 12px;
+	padding: 0.4rem; /* keep hit area */
+	box-shadow: none; /* no shadow */
+	cursor: pointer;
+}
+
+.icon-btn .icon {
+	width: 35px;
+	height: 35px;
+	color: #6b5ea8;
+}
+
+/* Custom header icons styling */
+.custom-header-icon {
+	transition: all 0.3s ease;
+	filter: var(--header-icon-normal);
+}
+
+.icon-btn:hover .custom-header-icon {
+	transform: scale(1.1);
+	filter: var(--header-icon-hover);
+}
+
+.admin-inline .custom-header-icon {
+	filter: var(--header-user-icon);
+}
+
+.profile-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: linear-gradient(135deg, #e9ecff 0%, #efe7ff 100%);
+	color: #2b2d42;
+	border-radius: 999px;
+	padding: 0.4rem 0.75rem;
+	box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+	border: 1px solid rgba(17,24,39,0.06);
+}
+
+.profile-chip .chip-icon {
+	width: 22px;
+	height: 22px;
+	color: #5b56a3;
+}
+
+.profile-chip .chip-name {
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: #2b2d42;
+}
+
+/* Plain text Administrator label: match left brand's typography */
+.admin-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+.admin-icon { 
+	width: 35px; 
+	height: 35px; 
+	/* Remove color property as it will be handled by filter for custom SVG */
+}
+.admin-label {
+	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+	font-weight: 600; /* strong like brand */
+	font-size: 1.50rem;
+	color: #2b2d42; /* same tone as brand text */
+}
+
+/* Notification popover */
+.notif-popover {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 8px);
+	width: 280px;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 22px 48px -16px rgba(15, 23, 42, 0.22), 0 8px 20px rgba(16,24,40,0.08);
+	border: 1px solid rgba(17, 24, 39, 0.08);
+	z-index: 50;
+	overflow: hidden;
+}
+.notif-header {
+	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+	font-weight: 700;
+	padding: 0.65rem 0.9rem;
+	border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+	color: #111827;
+}
+.notif-list { list-style: none; margin: 0; padding: 0.5rem 0; }
+.notif-item {
+	padding: 0.5rem 0.9rem;
+	font-size: 0.9rem;
+	color: #4b5563;
+}
+
+@media (max-width: 768px) {
+	.title-text { font-size: 1.5rem; }
+	.title-accent { height: 22px; }
+	.profile-chip .chip-name { display: none; }
+	.notif-popover { width: 240px; }
+}
+
+/* Bell shake animation: applied when button has .shake */
+.bell-btn .custom-header-icon { transform-origin: 50% 12%; display: inline-block; }
+.bell-btn.shake .custom-header-icon { animation: bell-shake 0.8s ease-in-out; }
+@keyframes bell-shake {
+	0%   { transform: rotate(0deg); }
+	15%  { transform: rotate(15deg); }
+	30%  { transform: rotate(-12deg); }
+	45%  { transform: rotate(9deg); }
+	60%  { transform: rotate(-6deg); }
+	75%  { transform: rotate(3deg); }
+	100% { transform: rotate(0deg); }
+}
+
+/* ===== HEADER CUSTOMIZATION GUIDE ===== */
+/*
+  CARA MENGUBAH WARNA HEADER ICONS:
+  
+  1. Edit nilai CSS variables di bagian :root:
+     --header-icon-normal: untuk warna icon normal (notifikasi & user)
+     --header-icon-hover: untuk warna icon saat hover
+     --header-user-icon: untuk warna khusus icon user
+     
+  2. Contoh filter warna populer untuk header icons:
+     - Putih: brightness(0) invert(1)
+     - Hitam: brightness(0)
+     - Merah: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)
+     - Hijau: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%)
+     - Biru: brightness(0) saturate(100%) invert(26%) sepia(100%) saturate(2500%) hue-rotate(201deg) brightness(102%) contrast(98%)
+     - Orange: brightness(0) saturate(100%) invert(55%) sepia(92%) saturate(1115%) hue-rotate(359deg) brightness(103%) contrast(103%)
+     - Ungu (default): brightness(0) saturate(100%) invert(38%) sepia(25%) saturate(1295%) hue-rotate(245deg) brightness(89%) contrast(88%)
+     - Asli: none (menggunakan warna asli SVG)
+     
+  3. Ganti file SVG dengan file custom Anda di folder /public/:
+     - notifikasi.svg (untuk icon notification)
+     - account.svg (untuk icon user)
+*/
+
