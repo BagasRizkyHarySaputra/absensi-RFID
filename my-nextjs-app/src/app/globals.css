@@ -15,6 +15,8 @@
 
 html {
   color-scheme: light dark;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
 }
 
 body {
@@ -23,8 +25,30 @@ body {
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+  /* Improve mobile scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 * {
   font-family: var(--font-poppins);
+  /* Box sizing for better layout control */
+  box-sizing: border-box;
+}
+
+/* Mobile-friendly input styling */
+input, button, select, textarea {
+  /* Remove iOS default styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Prevent zoom on iOS */
+  font-size: 16px;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
 }

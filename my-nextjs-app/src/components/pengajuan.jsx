@@ -214,7 +214,7 @@ export default function PengajuanPage() {
 
             {/* Reason */}
             <div className="form-field alasan-field">
-              <label className="field-label">Alasan Izin *</label>
+              <label className="field-label">Alasan Izin</label>
               <textarea 
                 className="pill-textarea" 
                 placeholder="Masukkan Alasan (wajib diisi)" 

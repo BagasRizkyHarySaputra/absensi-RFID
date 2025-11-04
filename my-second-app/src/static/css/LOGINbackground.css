@@ -1,0 +1,522 @@
+.login-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  background: linear-gradient(180deg, #2E80E4 0%, #6DA0E1 50%, #DEC2DB 100%) !important;
+}
+
+/* Layer noise/texture dengan bintik-bintik */
+.noise-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 60% 80%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 90% 70%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 10% 30%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 70% 10%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 30% 90%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 50% 60%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 85% 45%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 15% 65%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 95% 25%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 25% 15%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 75% 85%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 45% 25%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 65% 55%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 35% 75%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 55% 35%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 5% 50%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at 85% 90%, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+  background-size: 
+    80px 80px, 120px 120px, 60px 60px, 100px 100px, 90px 90px,
+    110px 110px, 70px 70px, 95px 95px, 85px 85px, 75px 75px,
+    65px 65px, 105px 105px, 115px 115px, 55px 55px, 125px 125px,
+    135px 135px, 45px 45px, 145px 145px, 155px 155px, 35px 35px;
+  animation: sparkle-float 15s infinite linear;
+}
+
+/* Animasi untuk efek bergerak */
+@keyframes sparkle-float {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Gunung depan menggunakan SVG - 3 posisi berbeda */
+.front-mountain-1 {
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 50%;
+  height: 70%;
+  background-image: url('/Front-Mountain.svg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: contain;
+  z-index: 5;
+  opacity: 0.9;
+}
+
+.front-mountain-2 {
+  position: absolute;
+  bottom: 0;
+  right: -15%;
+  width: 45%;
+  height: 65%;
+  background-image: url('/Front-Mountain.svg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: contain;
+  z-index: 4;
+  opacity: 0.7;
+  transform: scaleX(-1); /* Mirror horizontal */
+}
+
+.front-mountain-3 {
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  width: 40%;
+  height: 55%;
+  background-image: url('/Front-Mountain.svg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: contain;
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.shapes-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Bulan besar */
+.moon {
+  position: absolute;
+  top: 15%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f8f8f8 30%, #e8e8e8 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.4),
+    inset -8px -8px 0 rgba(220, 220, 220, 0.2);
+  opacity: 0.9;
+  z-index: 10;
+}
+
+/* Bintang-bintang */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  z-index: 8;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite alternate;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.star-1 {
+  width: 2px;
+  height: 2px;
+  top: 20%;
+  left: 25%;
+  animation-delay: 0s;
+}
+
+.star-2 {
+  width: 3px;
+  height: 3px;
+  top: 30%;
+  left: 75%;
+  animation-delay: 0.5s;
+}
+
+.star-3 {
+  width: 2px;
+  height: 2px;
+  top: 40%;
+  left: 45%;
+  animation-delay: 1s;
+}
+
+.star-4 {
+  width: 2px;
+  height: 2px;
+  top: 25%;
+  left: 85%;
+  animation-delay: 1.5s;
+}
+
+.star-5 {
+  width: 3px;
+  height: 3px;
+  top: 35%;
+  left: 15%;
+  animation-delay: 2s;
+}
+
+.star-6 {
+  width: 2px;
+  height: 2px;
+  top: 15%;
+  left: 65%;
+  animation-delay: 0.8s;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+/* Hapus semua shape kotak */
+
+/* Responsive */
+@media (max-width: 768px) {
+  .front-mountain-1 {
+    width: 60%;
+    height: 60%;
+    left: -15%;
+  }
+  
+  .front-mountain-2 {
+    width: 55%;
+    height: 55%;
+    right: -20%;
+  }
+  
+  .front-mountain-3 {
+    width: 50%;
+    height: 45%;
+    left: 25%;
+  }
+  
+  .moon {
+    width: 60px;
+    height: 60px;
+    top: 10%;
+    right: 10%;
+  }
+  
+  .star {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .front-mountain-1 {
+    width: 70%;
+    height: 50%;
+    left: -20%;
+  }
+  
+  .front-mountain-2 {
+    width: 65%;
+    height: 45%;
+    right: -25%;
+  }
+  
+  .front-mountain-3 {
+    width: 55%;
+    height: 40%;
+    left: 20%;
+  }
+  
+  .moon {
+    width: 50px;
+    height: 50px;
+    top: 8%;
+    right: 8%;
+  }
+  
+  .star {
+    transform: scale(0.6);
+  }
+}
+
+.mountain-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mountain-layer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Lapisan gunung paling belakang */
+.mountain-1 {
+  clip-path: polygon(
+    0% 100%, 
+    0% 70%, 
+    15% 65%, 
+    25% 55%, 
+    35% 60%, 
+    50% 45%, 
+    65% 50%, 
+    75% 40%, 
+    85% 45%, 
+    100% 35%, 
+    100% 100%
+  );
+  background: linear-gradient(180deg, 
+    rgba(46, 128, 228, 0.8) 0%, 
+    rgba(109, 160, 225, 0.8) 50%, 
+    rgba(222, 194, 219, 0.8) 100%
+  );
+  opacity: 0.6;
+}
+
+/* Lapisan gunung tengah */
+.mountain-2 {
+  clip-path: polygon(
+    0% 100%, 
+    0% 80%, 
+    10% 75%, 
+    20% 65%, 
+    30% 70%, 
+    45% 55%, 
+    60% 60%, 
+    70% 50%, 
+    80% 55%, 
+    90% 45%, 
+    100% 50%, 
+    100% 100%
+  );
+  background: linear-gradient(180deg, 
+    rgba(46, 128, 228, 0.9) 0%, 
+    rgba(109, 160, 225, 0.9) 50%, 
+    rgba(222, 194, 219, 0.9) 100%
+  );
+  opacity: 0.7;
+}
+
+/* Lapisan gunung depan */
+.mountain-3 {
+  clip-path: polygon(
+    0% 100%, 
+    0% 85%, 
+    12% 80%, 
+    22% 70%, 
+    32% 75%, 
+    42% 60%, 
+    55% 65%, 
+    68% 55%, 
+    78% 60%, 
+    88% 50%, 
+    100% 55%, 
+    100% 100%
+  );
+  background: linear-gradient(180deg, 
+    rgba(46, 128, 228, 1) 0%, 
+    rgba(109, 160, 225, 1) 50%, 
+    rgba(222, 194, 219, 1) 100%
+  );
+  opacity: 0.8;
+}
+
+/* Efek cahaya dan bintang */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 2s infinite alternate;
+}
+
+.star-1 {
+  width: 2px;
+  height: 2px;
+  top: 15%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.star-2 {
+  width: 3px;
+  height: 3px;
+  top: 25%;
+  left: 70%;
+  animation-delay: 0.5s;
+}
+
+.star-3 {
+  width: 2px;
+  height: 2px;
+  top: 35%;
+  left: 40%;
+  animation-delay: 1s;
+}
+
+.star-4 {
+  width: 1px;
+  height: 1px;
+  top: 45%;
+  left: 80%;
+  animation-delay: 1.5s;
+}
+
+.star-5 {
+  width: 2px;
+  height: 2px;
+  top: 20%;
+  left: 90%;
+  animation-delay: 2s;
+}
+
+.star-6 {
+  width: 3px;
+  height: 3px;
+  top: 10%;
+  left: 60%;
+  animation-delay: 0.3s;
+}
+
+/* Bulan */
+.moon {
+  position: absolute;
+  top: 15%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f0f0 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  opacity: 0.9;
+}
+
+/* Awan */
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+}
+
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  opacity: 0.6;
+  animation: float 8s ease-in-out infinite;
+}
+
+.cloud-1 {
+  width: 100px;
+  height: 40px;
+  top: 30%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.cloud-2 {
+  width: 80px;
+  height: 30px;
+  top: 20%;
+  left: 60%;
+  animation-delay: 2s;
+}
+
+.cloud-3 {
+  width: 120px;
+  height: 50px;
+  top: 40%;
+  left: 80%;
+  animation-delay: 4s;
+}
+
+/* Animasi */
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  25% {
+    transform: translateX(10px) translateY(-5px);
+  }
+  50% {
+    transform: translateX(-5px) translateY(-10px);
+  }
+  75% {
+    transform: translateX(-10px) translateY(-5px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .moon {
+    width: 60px;
+    height: 60px;
+    top: 10%;
+    right: 10%;
+  }
+  
+  .cloud {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .moon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .cloud {
+    transform: scale(0.6);
+  }
+}

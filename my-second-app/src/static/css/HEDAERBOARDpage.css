@@ -1,0 +1,418 @@
+/* Header Styles */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Left Side - Logo and Title */
+.header-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.header-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Menu Toggle Button */
+.menu-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.menu-toggle-btn:hover {
+  background: #F3F4F6;
+  transform: scale(1.05);
+}
+
+.menu-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  filter: brightness(0) saturate(100%) invert(38%) sepia(81%) saturate(2618%) hue-rotate(231deg) brightness(93%) contrast(92%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.menu-toggle-btn:hover .menu-icon {
+  filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2618%) hue-rotate(231deg) brightness(90%) contrast(95%);
+  transform: scale(1.1) rotate(90deg);
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: white;
+  border-radius: 50%;
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 
+              0 2px 4px rgba(0, 0, 0, 0.1),
+              0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 
+              0 3px 6px rgba(0, 0, 0, 0.15),
+              0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-Title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #5B62B3;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  font-size: 0.875rem;
+  color: #5B62B3;
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* Center - Empty space for balanced layout */
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Right Side - Actions */
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.header-action-btn:hover {
+  background: #F3F4F6;
+  transform: translateY(-1px);
+}
+
+.header-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  filter: brightness(0) saturate(100%) invert(38%) sepia(81%) saturate(2618%) hue-rotate(231deg) brightness(93%) contrast(92%);
+  transition: all 0.3s ease;
+}
+
+.header-action-btn:hover .header-icon {
+  filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2618%) hue-rotate(231deg) brightness(90%) contrast(95%);
+  transform: scale(1.1);
+}
+
+/* User Profile Dropdown */
+.user-profile {
+  position: relative;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: #F3F4F6;
+  transform: scale(1.05);
+}
+
+.profile-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  filter: brightness(0) saturate(100%) invert(38%) sepia(81%) saturate(2618%) hue-rotate(231deg) brightness(93%) contrast(92%);
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover .profile-icon {
+  filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2618%) hue-rotate(231deg) brightness(90%) contrast(95%);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.user-profile:hover .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.user-role {
+  font-size: 0.8rem;
+  color: #6B7280;
+}
+
+.dropdown-divider {
+  margin: 0;
+  border: none;
+  border-top: 1px solid #E5E7EB;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #374151;
+  transition: all 0.2s ease;
+  border-radius: 0 0 12px 12px;
+}
+
+.dropdown-item:hover {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .header-left {
+    flex: none;
+  }
+
+  .header-logo {
+    width: 40px;
+    height: 40px;
+    padding: 3px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 
+                0 1px 3px rgba(0, 0, 0, 0.08),
+                0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .menu-toggle-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .menu-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .header-title {
+    font-size: 0.8rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .header-action-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .header-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .profile-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .profile-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 0.5rem;
+  }
+
+  .header-logo-section {
+    gap: 0.75rem;
+  }
+
+  .header-logo {
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 
+                0 1px 2px rgba(0, 0, 0, 0.06),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .menu-toggle-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .menu-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .header-title {
+    font-size: 0.75rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .header-actions {
+    gap: 0.25rem;
+  }
+
+  .header-action-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .header-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .profile-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .profile-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .user-dropdown {
+    min-width: 180px;
+    right: -10px;
+  }
+}
+
+/* Animation for notification badge (optional) */
+.header-action-btn::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #EF4444;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.header-action-btn.has-notification::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Subtle animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.header-action-btn.has-notification {
+  animation: pulse 2s infinite;
+}

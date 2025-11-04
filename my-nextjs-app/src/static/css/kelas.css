@@ -98,6 +98,66 @@
 @media (max-width: 768px) {
   .kelas-container { padding-inline: 1rem; }
   .kelas-list-scroll { max-height: 360px; }
-  /* Slightly relax the min width for time column on small screens */
-  .kelas-item { grid-template-columns: 1fr minmax(140px, 200px) 1fr; }
+  /* Mobile-friendly layout: left = subject + teacher, right = time (centered vertically) */
+  .kelas-item {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "subject time"
+      "teacher time";
+    align-items: center; /* center time vertically relative to two lines */
+    gap: 0.35rem 0.75rem;
+    padding: 0.8rem 0.9rem;
+    min-height: 70px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    margin-bottom: 0.75rem; /* tighter vertical rhythm */
+  }
+  .kelas-item .subject {
+    grid-area: subject;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    max-width: 56vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    color: #111827;
+  }
+  .kelas-item .teacher {
+    grid-area: teacher;
+    align-self: end; /* sit just below subject */
+    font-size: 0.95rem; /* same size as subject */
+    line-height: 1.2;
+    color: #111827; /* same tone as subject */
+    font-weight: 700; /* same weight as subject */
+    justify-self: start; /* align text to the left column, not the right */
+    text-align: left; /* ensure left alignment within the grid cell */
+    max-width: 56vw; /* prevent wrapping overly long names */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .kelas-item .time {
+    grid-area: time;
+    justify-self: end;
+    align-self: center; /* centered between subject and teacher */
+    text-align: right;
+    font-size: 0.95rem; /* match left side size */
+    font-variant-numeric: tabular-nums;
+    padding: 0; /* reset previous */
+    margin: 0;  /* reset previous */
+    border: 0;  /* remove dashed line */
+    min-width: 96px; /* keep a stable width for times */
+  }
+
+  /* Adjust current indicator padding so it looks good on mobile */
+  .kelas-item.current::before { left: 6px; top: 6px; bottom: 6px; width: 5px; }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .kelas-list-scroll { max-height: 420px; }
+  .kelas-item { padding: 0.75rem 0.85rem; }
+  .kelas-item .subject { font-size: 0.9rem; max-width: 60vw; }
+  .kelas-item .teacher { font-size: 0.9rem; max-width: 60vw; }
+  .kelas-item .time { font-size: 0.9rem; min-width: 88px; }
 }

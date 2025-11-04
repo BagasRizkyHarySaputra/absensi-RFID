@@ -185,8 +185,110 @@
 
 /* responsive */
 @media (max-width: 768px) {
+	.history-container { padding: 1rem; }
 	.history-header { font-size: 1.5rem; }
 	.history-card { padding: 0.75rem; }
+
+	/* Show only Date, Presence, Status on mobile */
+	.history-table { min-width: 0; width: 100%; }
+	/* Hide: Time(2), NIS(4), NISN(5), Name(6), Class(7), Information(9) */
+	.history-table thead th:nth-child(2),
+	.history-table tbody td:nth-child(2),
+	.history-table thead th:nth-child(4),
+	.history-table tbody td:nth-child(4),
+	.history-table thead th:nth-child(5),
+	.history-table tbody td:nth-child(5),
+	.history-table thead th:nth-child(6),
+	.history-table tbody td:nth-child(6),
+	.history-table thead th:nth-child(7),
+	.history-table tbody td:nth-child(7),
+	.history-table thead th:nth-child(9),
+	.history-table tbody td:nth-child(9) {
+		display: none;
+	}
+
+	/* Tighter padding and font-size for mobile */
+	.history-table thead th { padding: 0.7rem 0.75rem; font-size: 0.8rem; }
+	.history-table td { padding: 0.7rem 0.75rem; font-size: 0.9rem; }
+
+	/* Extra shrink for the visible 3 headers so they fit comfortably */
+	.history-table thead th:nth-child(1),
+	.history-table thead th:nth-child(3),
+	.history-table thead th:nth-child(8) { font-size: 0.75rem; letter-spacing: 0.1px; }
+
+	/* Re-apply rounded corners for new last visible column (Status = 8) */
+	.history-table thead th:nth-child(1),
+	.history-table tbody td:nth-child(1) {
+		border-top-left-radius: 0.75rem;
+		border-bottom-left-radius: 0.75rem;
+	}
+	.history-table thead th:nth-child(8),
+	.history-table tbody td:nth-child(8) {
+		border-top-right-radius: 0.75rem;
+		border-bottom-right-radius: 0.75rem;
+	}
+
+	/* Keep status badge readable */
+	.badge { font-size: 0.8rem; padding: 0.3rem 0.5rem; }
+	/* Center status in its column to maximize space on small devices */
+	.history-table thead th:nth-child(8),
+	.history-table tbody td:nth-child(8) { text-align: center; }
+
+	/* Hide the left data-info item ("Showing X of Y records") on mobile */
+	.data-info p:first-child { display: none; }
+	/* Keep the remaining item aligned to the right for a clean look */
+	.data-info { justify-content: flex-end; }
+
+	/* Hide horizontal scrollbar track (garis abu-abu) when table scrolls */
+	.table-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+	.table-scroll::-webkit-scrollbar { height: 0px; background: transparent; }
+}
+
+/* Extra-small phones like iPhone SE */
+@media (max-width: 360px) {
+	/* Give more content width */
+	.history-container { padding: 0.5rem; }
+	.history-card { padding: 0.5rem; }
+	.table-scroll { border-radius: 0.9rem; }
+
+	/* Tighten table spacing and typography even more */
+	.history-table { table-layout: fixed; }
+	.history-table thead th { padding: 0.48rem 0.5rem; font-size: 0.7rem; }
+	.history-table td { padding: 0.48rem 0.5rem; font-size: 0.8rem; }
+	/* Distribute widths across the 3 visible columns: Date(1), Presence(3), Status(8) */
+	.history-table thead th:nth-child(1),
+	.history-table tbody td:nth-child(1) { width: 34%; }
+	.history-table thead th:nth-child(3),
+	.history-table tbody td:nth-child(3) { width: 36%; }
+	.history-table thead th:nth-child(8),
+	.history-table tbody td:nth-child(8) { width: 30%; text-align: center; }
+
+	/* Compact badge so it never gets clipped */
+	.badge { font-size: 0.68rem; padding: 0.22rem 0.4rem; gap: 0.3rem; }
+	.badge .icon { width: 12px; height: 12px; }
+
+	/* Make the three header labels even smaller on extra-small screens */
+	.history-table thead th:nth-child(1),
+	.history-table thead th:nth-child(3),
+	.history-table thead th:nth-child(8) { font-size: 0.65rem; }
+
+	/* Allow presence text to wrap without overflow */
+	.presence { white-space: normal; line-height: 1.15; }
+	/* Date column: slightly tighter line-height */
+	.history-table tbody td:nth-child(1) { line-height: 1.15; }
+
+	/* Ensure status stays centered */
+	.history-table thead th:nth-child(8),
+	.history-table tbody td:nth-child(8) { text-align: center; }
+}
+
+/* Target very specific small screens like Galaxy S8+ (360px width, tall viewport)
+   Slightly reduce table typography to avoid truncation */
+@media (max-width: 360px) and (min-height: 700px) {
+	.history-table thead th { font-size: 0.68rem; }
+	.history-table td { font-size: 0.78rem; }
+	.badge { font-size: 0.66rem; }
+	.badge .icon { width: 11px; height: 11px; }
 }
 
 /* ===== LOADING & ERROR STATES ===== */

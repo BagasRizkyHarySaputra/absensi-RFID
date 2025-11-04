@@ -1,0 +1,347 @@
+.login-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-end; /* place content to the right side */
+  align-items: center;
+  overflow: hidden;
+  padding-right: 0; /* flush to the right edge */
+  --footer-h: 56px; /* unify footer height for layout calculations */
+}
+
+/* Left side hero text area */
+.left-hero {
+  position: absolute; /* overlay the left area for perfect centering */
+  top: 0;
+  bottom: var(--footer-h); /* exclude footer height so visual center accounts for footer bar */
+  left: 0;
+  right: 420px; /* reserve space for the right panel */
+  display: grid;
+  place-items: center; /* center both horizontally and vertically */
+  padding-inline: 24px;
+  pointer-events: none; /* let interactions go to the form panel */
+}
+
+.left-hero-inner {
+  color: #ffffff;
+  text-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  user-select: none;
+  text-align: center; /* center the lines */
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.hero-line {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 100; /* thinnest */
+  font-variation-settings: "wght" 100; /* push variable font to the lightest weight */
+  letter-spacing: 0.08em; /* a bit more tracking so it feels thinner */
+  line-height: 1.1;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.18); /* lighter shadow for thinner look */
+  opacity: 0.95; /* slightly lighter paint */
+}
+
+.hero-rfid {
+  font-size: clamp(40px, 6.8vw, 72px);
+  font-weight: 800;
+  line-height: 0.95;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.hero-tech {
+  font-size: clamp(40px, 6.8vw, 72px); /* match RFID size (larger) */
+  font-weight: 800; /* match RFID weight */
+  letter-spacing: 0; /* keep same visual thickness */
+  line-height: 0.95;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+/* Responsive: hero is handled by clamp sizes above; no hard overrides needed */
+
+@media (max-width: 768px) {
+  .left-hero { display: none; } /* hide hero on small screens to prioritize login */
+}
+
+.login-form-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 420px; /* a bit wider for a side panel */
+  height: 100vh; /* stretch top-to-bottom, background reaches top and bottom */
+  padding: 0; /* remove padding so the white background can touch top/bottom */
+  padding-bottom: var(--footer-h); /* visually center content above footer while keeping full height */
+  margin-left: auto; /* ensure right alignment */
+  margin-right: 0; /* no gap on the right */
+  background: rgba(255, 255, 255, 0.95); /* white panel background */
+  backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center; /* vertically center inner content within the panel */
+}
+
+/* Bottom centered footer */
+.site-footer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0; /* stick to the very bottom */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none; /* allow clicks to pass through if overlapping */
+}
+
+.footer-badge {
+  background: #5B62B3; /* footer color */
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 0; /* full-width bar from edge to edge */
+  box-shadow: 0 6px 16px rgba(109, 40, 217, 0.35);
+  border: none;
+  pointer-events: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.footer-text {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  display: inline-block;
+  width: 100%;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-form-container {
+  background: transparent; /* background handled by wrapper */
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 40px; /* inner spacing for content */
+  width: 100%;
+}
+
+.login-header {
+  text-align: center; /* center the Welcome text inside the card */
+  margin-bottom: 30px;
+}
+
+.login-header h1 {
+  /* Gradient text from left (#5B62B3) to right (#DEC2DB) */
+  background: linear-gradient(90deg, #5B62B3 0%, #DEC2DB 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block; /* ensure gradient applies to text bounds */
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12); /* neutral shadow so gradient is visible */
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-header p {
+  color: #6B7280;
+  font-size: 14px;
+  margin: 0;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center; /* center narrower groups horizontally */
+}
+
+.login-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #DC2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 340px; /* keep label + input narrower */
+}
+
+.form-group label {
+  color: #2F4157; /* Email & Password label color */
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.form-group input {
+  width: 100%; /* make input fill the group width */
+  padding: 10px 16px; /* smaller box size */
+  /* Gradient border from top-left to bottom-right with white fill */
+  border: 2px solid transparent; /* use transparent border with background-clip trick */
+  border-radius: 9999px; /* pill/oval corners */
+  font-size: 14px;
+  transition: all 0.2s ease;
+  /* White fill inside, gradient on the border */
+  background:
+    linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+    linear-gradient(to bottom right, #5B62B3, #DEC2DB) border-box;
+  color: #5B62B3; /* input text color */
+  caret-color: #5B62B3;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.form-group input:focus {
+  outline: none; /* avoid double outline */
+  box-shadow: 0 0 0 3px rgba(91, 98, 179, 0.18); /* subtle glow */
+}
+
+.form-group input::placeholder {
+  color: #5B62B3;
+  opacity: 0.6; /* softer placeholder */
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between; /* Remember me on left, Forgot on right */
+  align-items: center;
+  width: 100%;
+  max-width: 340px; /* match input width */
+  margin: 6px 0 4px; /* tight spacing under password field */
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2F4157;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #6b0781;
+}
+
+.forgot-password {
+  color: #2F4157; /* darker (black) Forgot Password link */
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.forgot-password:hover {
+  color: #000000; /* keep black on hover */
+  text-decoration: underline;
+}
+
+.login-button {
+  /* Gradient filled button with pill corners */
+  background: linear-gradient(90deg, #5B62B3 0%, #DEC2DB 100%);
+  color: #ffffff;
+  width: 100%;
+  max-width: 340px; /* match input width */
+  display: inline-block;
+  border: 0;
+  padding: 14px 24px;
+  border-radius: 9999px; /* pill */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(91, 98, 179, 0.25);
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-button:hover {
+  background: linear-gradient(90deg, #6670C2 0%, #E1CFDF 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(91, 98, 179, 0.35);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.login-footer p {
+  color: #6B7280;
+  font-size: 14px;
+  margin: 0;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-footer a {
+  color: #2E80E4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.login-footer a:hover {
+  color: #1D4ED8;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-form-wrapper {
+    max-width: 350px;
+    padding: 15px;
+  }
+  
+  .login-form-container {
+    padding: 30px;
+  }
+  
+  .login-header h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-wrapper {
+    max-width: 320px;
+    padding: 10px;
+  }
+  
+  .login-form-container {
+    padding: 25px;
+  }
+  
+  .login-header h1 {
+    font-size: 22px;
+  }
+  
+  .form-options {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}

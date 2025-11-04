@@ -1,0 +1,388 @@
+/* Approvals.css */
+
+.approvals-page {
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  background: #f3f5fa;
+  min-height: 100vh;
+}
+
+.approvals-content {
+  margin-top: 2rem;
+  background: linear-gradient(to bottom, #ccdcf3, #ede6f1);
+  padding: 2rem;
+  border-radius: 32px;
+  min-height: calc(100vh - 8rem);
+}
+
+/* Search Section */
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input-container {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 3.5rem 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  color: #374151;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.search-button {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6B7280;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  color: #5B62B3;
+  background: rgba(91, 98, 179, 0.1);
+}
+
+/* Approvals Grid */
+.approvals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Action Card - Same style as DASHBOARDpage */
+.action-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-category {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #5B62B3;
+  margin: 0;
+}
+
+.card-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #5B62B3;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-description {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #5B62B3;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.user-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #5B62B3, #8B92E6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-details {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-name {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #5B62B3;
+  line-height: 1.2;
+}
+
+.user-class {
+  display: block;
+  font-size: 0.75rem;
+  color: #6B7280;
+  line-height: 1.2;
+  margin-top: 0.25rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: auto;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Pending cards with icon buttons */
+.pending-card .action-buttons {
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Approved cards with text buttons */
+.approved-card .action-buttons {
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+/* Remove the specific card content adjustments to ensure equal positioning */
+.pending-card .card-content,
+.approved-card .card-content {
+  justify-content: space-between;
+}
+
+.pending-card .user-info,
+.approved-card .user-info {
+  margin-bottom: 1.5rem;
+}
+
+.btn-accept, .btn-decline {
+  width: 72px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-accept {
+  background: #91C787;
+  border-color: #91C787;
+}
+
+.btn-decline {
+  background: transparent;
+  border-color: #B35B5C;
+}
+
+.btn-accept img, .btn-decline img {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-accept:hover, .btn-decline:hover {
+  transform: translateY(-1px);
+}
+
+.btn-accept:hover {
+  background: #7FB574;
+  border-color: #7FB574;
+  box-shadow: 0 4px 12px rgba(145, 199, 135, 0.15);
+}
+
+.btn-decline:hover {
+  background: rgba(179, 91, 92, 0.1);
+  border-color: #A04B4C;
+  box-shadow: 0 4px 12px rgba(179, 91, 92, 0.15);
+}
+
+/* Text buttons for approved items */
+.btn-cancel, .btn-accept-text {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s ease;
+  text-align: center;
+  width: 100%;
+  min-height: 32px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-cancel {
+  background: #B35B5C;
+  border-color: #B35B5C;
+  color: white;
+}
+
+.btn-accept-text {
+  background: transparent;
+  border-color: #91C787;
+  color: #91C787;
+}
+
+.btn-cancel:hover {
+  background: #A04B4C;
+  border-color: #A04B4C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(179, 91, 92, 0.15);
+}
+
+.btn-accept-text:hover {
+  background: rgba(145, 199, 135, 0.1);
+  border-color: #7FB574;
+  color: #7FB574;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(145, 199, 135, 0.15);
+}
+
+.status-badge {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+}
+
+.status-badge.approved {
+  background: #5B62B3;
+  color: white;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.page-btn {
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #5B62B3;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.page-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.page-btn.active {
+  background: #5B62B3;
+  color: white;
+  border-color: #5B62B3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .approvals-page {
+    padding: 1rem;
+  }
+
+  .approvals-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .approval-card {
+    padding: 1rem;
+  }
+
+  .search-input-container {
+    margin: 0 1rem;
+  }
+
+  .pagination {
+    gap: 0.25rem;
+  }
+
+  .page-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}

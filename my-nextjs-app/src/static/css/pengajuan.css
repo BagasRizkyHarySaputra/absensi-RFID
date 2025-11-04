@@ -64,7 +64,8 @@
 .dates-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 2.75rem; /* sedikit lebih lega antar kolom */
+  margin-bottom: 1.25rem; /* beri jarak vertikal dengan section berikutnya */
 }
 
 .form-field { 
@@ -316,6 +317,10 @@
   padding-inline: 4rem; /* doubled spacing as requested */
 }
 
+/* Tambah jarak vertikal antar kolom pengisian berikut */
+.keterangan-field { margin-top: 1.25rem; }
+.upload-field { margin-top: 1.25rem; }
+
 .evidence-row {
   display: grid;
   grid-template-columns: 72px 1fr;
@@ -401,9 +406,12 @@
 .seg-menu .opt .opt-sub { color: #6b7280; font-weight: 500; margin-left: 0.25rem; }
 
 @media (max-width: 768px) {
-  .dates-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .dates-grid { grid-template-columns: 1fr; gap: 1.5rem; /* jarak atas-bawah antar kolom tanggal lebih lega */ }
   .keterangan-field,
   .alasan-field,
   .spaced-block { padding-inline: 2rem; }
+  /* Jaga konsistensi jarak di mobile */
+  .keterangan-field { margin-top: 1.25rem; }
+  .upload-field { margin-top: 1.25rem; }
   .seg-menu.years { grid-template-columns: repeat(3, 1fr); }
 }

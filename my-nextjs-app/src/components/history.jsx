@@ -210,7 +210,6 @@ export default function HistoryPage() {
 			{!loading && (
 				<div className="history-card">
 					<div className="data-info">
-						<p>Showing {attendanceData.length} of {totalCount} records</p>
 						<p>Page {currentPage} of {totalPages}</p>
 					</div>
 					

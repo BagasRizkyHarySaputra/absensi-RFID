@@ -12,6 +12,12 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Sistem Absensi RFID",
   description: "Sistem manajemen absensi menggunakan teknologi RFID",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({

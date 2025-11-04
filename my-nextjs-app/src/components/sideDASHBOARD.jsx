@@ -17,6 +17,7 @@ import {
 const SidebarDashboard = ({ onMenuSelect, activeMenu = 'dashboard' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
 
@@ -62,8 +63,13 @@ const SidebarDashboard = ({ onMenuSelect, activeMenu = 'dashboard' }) => {
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   // Handle menu item click
@@ -123,7 +129,7 @@ const SidebarDashboard = ({ onMenuSelect, activeMenu = 'dashboard' }) => {
         <button
           id="sidebar-toggle"
           onClick={toggleSidebar}
-          className="sidebar-mobile-toggle"
+          className={`sidebar-mobile-toggle ${scrolled ? 'scrolled' : ''}`}
           aria-label="Toggle Sidebar"
         >
           {isOpen ? (

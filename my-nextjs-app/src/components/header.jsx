@@ -39,18 +39,25 @@ const Header = ({ pageTitle = "Dashboard" }) => {
   return (
     <div className="app-page-header" role="banner">
       <div className="top-row">
-        <div className="welcome-row">
-          <span className="welcome-prefix">Hi,</span>{" "}
-          <span className="welcome-name">{userName}</span>
-          <span className="welcome-suffix">!&nbsp;Selamat Datang!</span>
-          {user && (
-            <div className="user-info">
-              <span className="user-details">
-                {user.kelas && ` - ${user.kelas}`}
-                {user.role === 'admin' && ' (Administrator)'}
-              </span>
-            </div>
-          )}
+        <div className="welcome-row" aria-live="polite">
+          {/* Line 1: Hi, <Name>! */}
+          <span className="welcome-line greet">
+            <span className="welcome-prefix">Hi,</span>{" "}
+            <span className="welcome-name">{userName}</span>
+            <span className="welcome-bang">!</span>
+          </span>
+
+          {/* Line 2 (desktop): Selamat Datang! - <Kelas>
+              Line 2-3 (mobile): Selamat Datang! / -<Kelas> */}
+          <span className="welcome-line message">
+            <span className="welcome-suffix">Selamat Datang!</span>
+            {user?.kelas && (
+              <span className="welcome-class" aria-label="Kelas">{user.kelas}</span>
+            )}
+            {user?.role === 'admin' && (
+              <span className="welcome-role" aria-hidden> (Administrator)</span>
+            )}
+          </span>
         </div>
 
         {/* Removed date & NIS section per request */}

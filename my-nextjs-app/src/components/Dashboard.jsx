@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SidebarDashboard from './sideDASHBOARD';
 import DashboardBackground from './DashboardBACKGROUND';
 import { useAuth } from '../hooks/useAuth';
@@ -24,9 +24,18 @@ const Dashboard = () => {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const { user } = useAuth();
   
-  // Pagination state
+  // Viewport + Pagination state
+  const [isMobile, setIsMobile] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6; // jumlah baris per halaman (sesuaikan kebutuhan)
+  const pageSize = isMobile ? 2 : 6; // Mobile shows 2 rows per page, desktop 6
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   
   // Data for dashboard table - bisa disesuaikan berdasarkan user yang login
   const rows = useMemo(() => {
@@ -67,7 +76,12 @@ const Dashboard = () => {
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return rows.slice(start, start + pageSize);
-  }, [rows, currentPage]);
+  }, [rows, currentPage, pageSize]);
+
+  // Clamp current page if page size change reduces total pages
+  useEffect(() => {
+    setCurrentPage((p) => (p > totalPages ? totalPages : p));
+  }, [totalPages]);
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -130,7 +144,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedRows.map((row, idx) => (
+              {(isMobile ? rows : paginatedRows).map((row, idx) => (
                 <tr key={idx}>
                   <td>{row.date}</td>
                   <td>{row.time}</td>
@@ -152,6 +166,7 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
+        {!isMobile && (
         <div className="table-footer">
           <div className="pagination" role="navigation" aria-label="Pagination">
             <button
@@ -190,6 +205,7 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+        )}
       </div>
 
       {/* Bottom two-column grid */}

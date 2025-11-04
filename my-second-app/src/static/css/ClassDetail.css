@@ -1,0 +1,469 @@
+/* ClassDetail.css */
+
+.class-detail-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(180deg, #E8EDF9 0%, #F5F0F8 100%);
+  overflow: hidden;
+}
+
+.class-detail-container {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+
+/* Left Side - Class Card */
+.class-card-detail {
+  background: linear-gradient(180deg, rgba(219, 226, 255, 0.95), rgba(232, 221, 240, 0.95));
+  border-radius: 1.5rem;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+}
+
+.class-card-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F8FAFF, #FFF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(91, 98, 179, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.avatar-large {
+  font-size: 5rem;
+}
+
+.class-card-title {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: #5B62B3;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.class-info-box {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.info-title {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #5B62B3;
+  margin: 0 0 0.25rem 0;
+  text-align: center;
+}
+
+.info-subtitle {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #5B62B3;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.info-description {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #5B62B3;
+  line-height: 1.6;
+  text-align: justify;
+  margin: 0;
+}
+
+/* Right Side - Content */
+.class-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Schedule Section */
+.schedule-section {
+  background: linear-gradient(180deg, rgba(219, 226, 255, 0.85), rgba(232, 221, 240, 0.85));
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #5B62B3;
+  margin: 0;
+}
+
+.day-selector, .month-selector {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.day-btn, .month-btn {
+  background: #5B62B3;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.day-btn:hover, .month-btn:hover {
+  background: #4A4F9A;
+}
+
+.day-icon, .month-icon {
+  font-size: 0.7rem;
+}
+
+.dropdown-btn {
+  background: #5B62B3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: background 0.2s ease;
+}
+
+.dropdown-btn:hover {
+  background: #4A4F9A;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: #5B62B3;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  min-width: 150px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  width: 100%;
+  background: transparent;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #5B62B3;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-item.active {
+  background: rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+}
+
+.schedule-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.schedule-nav-btn {
+  background: #5B62B3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: 300;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  line-height: 1;
+}
+
+.schedule-nav-btn:hover {
+  background: #4A4F9A;
+  transform: scale(1.1);
+}
+
+.schedule-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.schedule-grid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.schedule-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.schedule-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 1.25rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Dynamic width based on duration - proportional sizing */
+.schedule-card[data-duration="1"] { min-width: 120px; max-width: 120px; }
+.schedule-card[data-duration="2"] { min-width: 180px; max-width: 180px; }
+.schedule-card[data-duration="3"] { min-width: 240px; max-width: 240px; }
+.schedule-card[data-duration="4"] { min-width: 300px; max-width: 300px; }
+.schedule-card[data-duration="5"] { min-width: 360px; max-width: 360px; }
+
+.schedule-periods {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  order: 3; /* Move to bottom */
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.schedule-period-number {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #5B62B3;
+  opacity: 0.5;
+}
+
+.schedule-subject {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #5B62B3;
+  margin: 0;
+  line-height: 1.2;
+  order: 1;
+}
+
+.schedule-teacher {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #8B93D9;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  order: 2;
+}
+
+/* Statistics Section */
+.statistics-section {
+  background: linear-gradient(180deg, rgba(219, 226, 255, 0.85), rgba(232, 221, 240, 0.85));
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-title {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #5B62B3;
+  margin: 0 0 1rem 0;
+  border-left: 4px solid #5B62B3;
+  padding-left: 0.75rem;
+  flex-shrink: 0;
+}
+
+.stat-title.absent {
+  color: #D8A8C8;
+  border-left-color: #D8A8C8;
+}
+
+.stat-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pie-chart {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.chart-label {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  fill: #5B62B3;
+}
+
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+.legend-btn {
+  background: var(--btn-color);
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.65rem 1.25rem;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 2.5rem;
+}
+
+.legend-btn.absent {
+  opacity: 0.9;
+}
+
+/* Back Button */
+.back-btn {
+  background: #5B62B3;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+.back-btn:hover {
+  background: #4A4F9A;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .class-detail-container {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .schedule-card {
+    min-width: 180px;
+    max-width: 180px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1440px) {
+  .class-detail-page {
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+  }
+}

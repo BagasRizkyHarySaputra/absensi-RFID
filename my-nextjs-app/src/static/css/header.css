@@ -34,10 +34,11 @@
 	font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 	font-weight: 800;
 	font-size: 1.1rem;
-	display: flex;
-	align-items: baseline;
-	gap: 0.35rem;
+	display: block; /* default: use explicit line blocks */
 }
+.welcome-line { display: block; }
+.welcome-line.greet { margin-bottom: 2px; }
+.welcome-line.message { display: block; }
 
 .welcome-prefix {
 	color: #6b7280;
@@ -54,6 +55,25 @@
 .welcome-suffix {
 	color: #111827;
 	font-weight: 800;
+}
+
+/* Class text that follows the welcome message */
+.welcome-class {
+	color: #6b7280;
+	font-weight: 700;
+	/* Desktop: inline with the welcome message on the second line */
+	display: inline;
+}
+/* Add the hyphen via CSS so we can vary spacing desktop vs mobile */
+.welcome-class::before { content: " - "; }
+
+.welcome-bang { color: #111827; }
+.welcome-role { color: #6b7280; font-weight: 600; }
+
+.user-details {
+	color: #6b7280;
+	font-weight: 600;
+	font-size: 1rem;
 }
 
 .title-row {
@@ -188,10 +208,43 @@
 }
 
 @media (max-width: 768px) {
+    .welcome-row {
+		font-size: 0.95rem;
+		line-height: 1.25;
+	}
+	/* Mobile: make the class go to its own line, with a tight hyphen at the start */
+	.welcome-class { display: block; color: #6b7280; font-weight: 700; }
+	.welcome-class::before { content: "-"; margin-right: 0; }
+
 	.title-text { font-size: 1.5rem; }
 	.title-accent { height: 22px; }
-	.profile-chip .chip-name { display: none; }
+
+	/* Sembunyikan elemen profil kanan (avatar + Hurricane) di mobile */
+	.admin-inline { display: none !important; }
+	.profile-chip { display: none !important; }
+
+	/* Header actions: hanya lonceng, sedikit turun agar sejajar */
+	.header-actions-minimal {
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.35rem;
+	}
+
 	.notif-popover { width: 240px; }
+}
+
+/* Media query untuk mobile sangat kecil */
+@media (max-width: 480px) {
+	/* Pastikan profil tetap tersembunyi */
+	.admin-inline { display: none !important; }
+	.profile-chip { display: none !important; }
+}
+
+/* Media query untuk mobile extra kecil */
+@media (max-width: 360px) {
+	.admin-inline { display: none !important; }
+	.profile-chip { display: none !important; }
 }
 
 /* Bell shake animation: applied when button has .shake */

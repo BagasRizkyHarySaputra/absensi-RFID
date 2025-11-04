@@ -1,0 +1,63 @@
+/* HEADERINpage.css */
+
+.header-in-page {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.header-title {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1.1;
+  margin: 0;
+  background: linear-gradient(90deg, #5B62B3 0%, #DEC2DB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.header-meta {
+  text-align: right;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.header-time {
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  background: linear-gradient(90deg, #5B62B3 0%, #DEC2DB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.header-date {
+  color: #64748B;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-in-page {
+    align-items: flex-start;
+  }
+
+  .header-title {
+    font-size: 1.75rem;
+  }
+
+  .header-meta .time {
+    font-size: 1.25rem;
+  }
+
+  .header-meta .date {
+    font-size: 0.875rem;
+  }
+}

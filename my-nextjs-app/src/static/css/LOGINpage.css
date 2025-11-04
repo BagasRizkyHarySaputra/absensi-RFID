@@ -102,11 +102,18 @@
   padding: 0.85rem 1.25rem;
   border: none;
   border-radius: 0.75rem; /* pill-like */
-  font-size: 0.95rem;
+  font-size: 16px; /* Prevent zoom on iOS */
   transition: all 0.18s ease;
   background: #ffffff;
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255,255,255,0.6);
   color: #0f172a;
+  
+  /* Mobile touch optimization */
+  min-height: 48px; /* Minimum touch target */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 
@@ -137,6 +144,15 @@
   cursor: pointer;
   color: #475569;
   transition: color 0.18s ease;
+  
+  /* Mobile touch optimization */
+  min-height: 44px; /* iOS minimum touch target */
+  min-width: 44px; /* iOS minimum touch target */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .password-toggle:hover {
@@ -179,13 +195,21 @@
   color: #ffffff;
   border: none;
   border-radius: 999px; /* pill */
-  font-size: 0.875rem;
+  font-size: 16px; /* Prevent zoom on iOS */
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   position: relative;
   overflow: hidden;
   letter-spacing: 1px;
+  
+  /* Mobile touch optimization */
+  min-height: 48px; /* Minimum touch target */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .login-button:hover:not(:disabled) {
@@ -250,15 +274,24 @@
 /* Responsive Design */
 @media (max-width: 640px) {
   .login-container {
-    padding: 0.5rem;
+    padding: 1rem 0.75rem;
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
   }
   
   .login-card {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    margin: 0 auto;
   }
   
-  .logo-title {
+  .login-card::before {
     font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.25rem;
   }
 }
 

@@ -60,6 +60,7 @@
 .sidebar-mobile-toggle {
   position: fixed;
   top: 1rem; /* Kembali ke posisi normal */
+  top: max(1rem, calc(env(safe-area-inset-top) + 0.5rem)); /* Safe area untuk iPhone dengan notch */
   left: 1rem;
   z-index: 1001;
   background: #667eea;
@@ -70,11 +71,40 @@
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  min-height: 44px; /* iOS minimum touch target */
+  min-width: 44px; /* iOS minimum touch target */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
+  touch-action: manipulation; /* Improve touch response */
 }
 
 .sidebar-mobile-toggle:hover {
   background: #5a67d8;
   transform: scale(1.05);
+}
+
+.sidebar-mobile-toggle:active {
+  transform: scale(0.95);
+  background: #553c9a;
+}
+
+/* Mobile scroll state: make button transparent and icon blue */
+@media (max-width: 768px) {
+  .sidebar-mobile-toggle.scrolled {
+    background: transparent;
+    color: #667eea; /* icon inherits this color */
+    box-shadow: none;
+  }
+  .sidebar-mobile-toggle.scrolled:hover {
+    background: rgba(102, 126, 234, 0.08);
+    transform: none;
+  }
+  .sidebar-mobile-toggle.scrolled:active {
+    background: rgba(102, 126, 234, 0.16);
+    transform: scale(0.98);
+  }
 }
 
 /* Sidebar Overlay for Mobile */
@@ -113,7 +143,7 @@
 
 /* Sidebar Header */
 .sidebar-header {
-  padding: 4rem 1.5rem 1.5rem 1.5rem; /* Padding atas lebih besar untuk jarak dari pojok */
+  padding: 5.5rem 1.5rem 1.5rem 1.5rem; /* Padding atas lebih besar untuk menghindari toggle button */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
@@ -259,6 +289,11 @@
   margin: var(--sidebar-nav-margin-vertical) var(--sidebar-nav-margin-horizontal);
   position: relative;
   transition: all 0.3s ease;
+  
+  /* Mobile touch optimization */
+  min-height: 48px; /* Minimum touch target for mobile */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .sidebar-nav-link:hover {
@@ -348,6 +383,11 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
+  
+  /* Mobile touch optimization */
+  min-height: 48px; /* Minimum touch target */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .logout-btn:hover {
@@ -482,6 +522,10 @@
     transform: translateX(-100%);
     border-radius: 0; /* Hilangkan border radius di mobile */
   }
+  /* Hilangkan tombol silang di header sidebar khusus mobile */
+  .sidebar-close-btn { display: none !important; }
+  /* Dengan tombol hilang, rapatkan konten header ke kiri */
+  .sidebar-header { justify-content: flex-start; }
   
   .sidebar.mobile-visible {
     transform: translateX(0);
@@ -495,7 +539,7 @@
   }
   
   .sidebar-header {
-    padding: 2rem 1rem 1.5rem 1rem; /* Padding atas juga di mobile untuk jarak dari pojok */
+    padding: 5.5rem 1rem 1.5rem 1rem; /* Padding atas lebih besar di mobile untuk jarak dari toggle button */
   }
   
   .sidebar-footer {
@@ -508,7 +552,10 @@
   }
   
   .sidebar-mobile-toggle {
-    top: 1rem; /* Kembali ke posisi normal di mobile */
+    top: 1.5rem; /* Sedikit lebih bawah untuk menghindari konflik dengan header mobile */
+    top: max(1.5rem, calc(env(safe-area-inset-top) + 1rem)); /* Safe area untuk mobile dengan notch */
+    left: 1rem;
+    z-index: 1002; /* Lebih tinggi dari header untuk memastikan terlihat */
   }
 }
 
