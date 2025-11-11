@@ -3,7 +3,7 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: flex-end; /* place content to the right side */
+  justify-content: flex-end; /* desktop: panel on right */
   align-items: center;
   overflow: hidden;
   padding-right: 0; /* flush to the right edge */
@@ -64,6 +64,9 @@
 
 @media (max-width: 768px) {
   .left-hero { display: none; } /* hide hero on small screens to prioritize login */
+  .login-container {
+    justify-content: flex-start; /* move panel to the left edge */
+  }
 }
 
 .login-form-wrapper {
@@ -74,7 +77,7 @@
   height: 100vh; /* stretch top-to-bottom, background reaches top and bottom */
   padding: 0; /* remove padding so the white background can touch top/bottom */
   padding-bottom: var(--footer-h); /* visually center content above footer while keeping full height */
-  margin-left: auto; /* ensure right alignment */
+  margin-left: auto; /* ensure right alignment on desktop */
   margin-right: 0; /* no gap on the right */
   background: rgba(255, 255, 255, 0.95); /* white panel background */
   backdrop-filter: blur(10px);
@@ -312,14 +315,46 @@
 /* Responsive */
 @media (max-width: 768px) {
   .login-form-wrapper {
-    max-width: 350px;
+    max-width: 100%; /* take full width so it can touch the left edge */
     padding: 15px;
+    /* Translucent panel to reveal mountain background on phones */
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 26px rgba(0,0,0,0.18); /* uniform shadow now that it spans full width */
+    margin-left: 0; /* ensure no unintended left gap */
   }
   
   .login-form-container {
     padding: 30px;
   }
-  
+
+  /* Ensure content sits above the overlay */
+  .login-form-container, .login-header h1, .login-header p, .form-group label, .form-group input, .forgot-password, .remember-me span {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Soft inner gradient to maintain readability over vivid background */
+  .login-form-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 60%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Inputs: slightly stronger white fill on translucent panel */
+  .form-group input {
+    background:
+      linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)) padding-box,
+      linear-gradient(to bottom right, #5B62B3, #DEC2DB) border-box;
+  }
+
+  .login-button { box-shadow: 0 6px 20px rgba(91,98,179,0.4); }
+
   .login-header h1 {
     font-size: 24px;
   }
@@ -327,21 +362,58 @@
 
 @media (max-width: 480px) {
   .login-form-wrapper {
-    max-width: 320px;
-    padding: 10px;
+    max-width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.20); /* slightly more transparent on very small screens */
   }
   
   .login-form-container {
-    padding: 25px;
+    padding: 26px;
   }
   
   .login-header h1 {
     font-size: 22px;
   }
-  
-  .form-options {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
+  /* Keep horizontal layout; push forgot password to the far right */
+  .form-options { flex-direction: row; gap: 10px; }
+  .remember-me { flex: 1 1 auto; }
+  .forgot-password { margin-left: auto; }
+}
+
+/* Large phones & narrow fold (≤431px) - refine translucency */
+@media (max-width: 431px) {
+  .login-form-wrapper { background: rgba(255,255,255,0.22); max-width:100%; }
+  .login-form-wrapper::before { background: linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.18) 60%, rgba(255,255,255,0.08) 100%); }
+  /* Ensure alignment consistency on large phones */
+  .form-options { flex-direction: row; }
+  .remember-me { flex: 1 1 auto; }
+  .forgot-password { margin-left: auto; }
+}
+
+/* Ultra narrow (≤370px) - slightly stronger backdrop blur for readability */
+@media (max-width: 370px) {
+  .login-form-wrapper { backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%); }
+}
+
+/* Galaxy Z Fold portrait inner widths (≈372-405px) */
+@media (min-width: 372px) and (max-width: 405px) {
+  .login-form-wrapper { background: rgba(255,255,255,0.24); }
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading state for login button */
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-button:disabled:hover {
+  transform: none;
+  background: var(--login-button-bg, #2563eb);
 }

@@ -1,14 +1,16 @@
-// database-backup.jsx - Backup with hardcoded values for testing
+// database-backup.jsx - Backup with environment variables only
 import { createClient } from '@supabase/supabase-js'
 
-// Hardcoded Supabase configuration for testing
-const supabaseUrl = 'https://hnuixecasnqgjwarciow.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhudWl4ZWNhc25xZ2p3YXJjaW93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxNDYwMjksImV4cCI6MjA3NzcyMjAyOX0.Hw1VhGcMuG5tTFTUh7I2kVpYj3M7r9P0T_40EOXnSY0'
+// Use environment variables only
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-console.log('🔑 Using hardcoded Supabase config for testing');
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('� database-backup: Missing environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local');
+}
 
 // Create Supabase client
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database functions for Approvals using pengajuan_izin table
 export const approvalDatabase = {

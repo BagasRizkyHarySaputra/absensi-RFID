@@ -3,10 +3,39 @@ import { supabase } from '../lib/supabase';
 // Function to submit pengajuan (izin/sakit) to database
 export const submitPengajuan = async (pengajuanData) => {
   try {
-    // Check if supabase is available
+    // Check if supabase is available and configured
     if (!supabase) {
+      console.log('Supabase client not available');
       throw new Error('Database tidak tersedia');
     }
+
+    // Check if environment variables are configured
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.warn('Supabase environment variables not configured:', { 
+        hasUrl: !!supabaseUrl, 
+        hasKey: !!supabaseKey 
+      });
+      throw new Error('Supabase tidak dikonfigurasi - environment variables tidak ditemukan');
+    }
+
+    // Test database connection first
+    console.log('Testing database connection...');
+    const { data: testData, error: testError } = await supabase
+      .from('pengajuan_izin')
+      .select('count', { count: 'exact', head: true });
+    
+    if (testError) {
+      console.error('Database connection test failed:', testError);
+      throw new Error(`Database connection error: ${testError.message || 'Cannot connect to database'}`);
+    }
+    
+    console.log('Database connection successful');
+
+    // Log for debugging
+    console.log('Submitting pengajuan with data:', pengajuanData);
 
     // Validate required fields
     if (!pengajuanData.nis || !pengajuanData.tanggal_mulai || !pengajuanData.tanggal_selesai || !pengajuanData.alasan) {
@@ -27,22 +56,55 @@ export const submitPengajuan = async (pengajuanData) => {
       tanggal_disetujui: null
     };
 
+    console.log('Attempting to insert data:', formattedData);
+
     // Insert to database
     const { data, error } = await supabase
       .from('pengajuan_izin')
       .insert([formattedData])
       .select();
 
+    console.log('Insert result - data:', data);
+    console.log('Insert result - error:', error);
+
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Supabase error occurred:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error keys:', Object.keys(error || {}));
+      
+      // Enhanced error logging
+      const errorDetails = {
+        message: error?.message || 'Unknown error',
+        details: error?.details || null,
+        hint: error?.hint || null,
+        code: error?.code || null,
+        status: error?.status || null,
+        statusText: error?.statusText || null,
+        fullError: JSON.stringify(error, null, 2)
+      };
+      
+      console.error('Supabase error details:', errorDetails);
       
       // Handle specific error cases
-      if (error.message.includes('table') && error.message.includes('does not exist')) {
-        throw new Error('Tabel pengajuan_izin belum dibuat. Silakan buat tabel terlebih dahulu di Supabase Dashboard.');
-      } else if (error.message.includes('permission denied')) {
-        throw new Error('Tidak memiliki permission untuk mengakses database. Periksa RLS policies.');
+      if (error?.message?.includes('relation') && error?.message?.includes('does not exist')) {
+        throw new Error('Tabel pengajuan_izin belum dibuat di database. Silakan buat tabel terlebih dahulu.');
+      } else if (error?.code === 'PGRST116' || error?.code === '42P01') {
+        throw new Error('Tabel pengajuan_izin tidak ditemukan di database. Silakan buat tabel di Supabase.');
+      } else if (error?.message?.includes('permission denied') || error?.code === '42501') {
+        throw new Error('RLS Policy Error: Tidak memiliki permission untuk INSERT. Nonaktifkan RLS atau buat policy yang tepat.');
+      } else if (error?.code === 'PGRST301') {
+        throw new Error('Database schema error. Periksa struktur tabel di Supabase.');
+      } else if (error?.message?.includes('new row violates row-level security policy')) {
+        throw new Error('RLS Policy Violation: Row Level Security memblokir operasi INSERT. Periksa RLS policies.');
+      } else if (error?.message?.includes('JWT')) {
+        throw new Error('Authentication error: Invalid JWT token. Periksa anon key di .env.local');
+      } else if (!error?.message && Object.keys(error || {}).length === 0) {
+        throw new Error('Database tidak dapat diakses - kemungkinan masalah RLS atau network');
+      } else if (error?.message === '{}' || JSON.stringify(error) === '{}') {
+        throw new Error('Database connection error - periksa RLS policies dan network connection');
       } else {
-        throw new Error(`Database error: ${error.message}`);
+        const errorMsg = error?.message || error?.details || 'Unknown database error';
+        throw new Error(`Database error: ${errorMsg}`);
       }
     }
 

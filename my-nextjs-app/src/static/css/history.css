@@ -10,6 +10,30 @@
 	position: relative;
 }
 
+/* User Info Header */
+.user-info-header {
+	background: linear-gradient(135deg, rgba(139, 69, 219, 0.1) 0%, rgba(67, 56, 202, 0.1) 100%);
+	padding: 1.5rem 2rem;
+	border-radius: 1rem;
+	border: 1px solid rgba(139, 69, 219, 0.2);
+	margin-bottom: 1rem;
+}
+
+.user-info-header h3 {
+	margin: 0 0 0.5rem 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #6B46C1;
+	letter-spacing: 0.3px;
+}
+
+.user-info-header .user-details {
+	margin: 0;
+	font-size: 0.95rem;
+	color: #64748B;
+	font-weight: 500;
+}
+
 /* soft gradient background like the mock */
 .history-container::before {
 	content: '';

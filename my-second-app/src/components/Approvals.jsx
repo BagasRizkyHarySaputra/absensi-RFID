@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import '../static/css/Approvals.css';
 import HEADERINpage from './HEADERINpage';
-import { approvalDatabase } from './database-backup'; // Using backup with hardcoded values
+import { approvalService } from '../lib/approvalService';
 
 const Approvals = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,11 +17,11 @@ const Approvals = () => {
 
   // Load approvals from database
   const loadApprovals = async () => {
-    console.log('🚀 Starting to load approvals...');
+    console.log('🚀 Starting to load approvals from database...');
     setLoading(true);
     
     // Test database connection first
-    const connectionOK = await approvalDatabase.testConnection();
+    const connectionOK = await approvalService.testConnection();
     if (!connectionOK) {
       setError('Failed to connect to database');
       setLoading(false);
@@ -29,7 +29,7 @@ const Approvals = () => {
     }
     
     try {
-      const { data, error, count } = await approvalDatabase.getApprovals(
+      const { data, error, count } = await approvalService.getApprovals(
         currentPage, 
         itemsPerPage, 
         searchQuery
@@ -44,22 +44,40 @@ const Approvals = () => {
       } else {
         // Transform pengajuan_izin data to match expected format
         const transformedData = await Promise.all(data.map(async (pengajuan) => {
-          // Get student data by NIS
-          const studentData = await approvalDatabase.getStudentByNis(pengajuan.nis);
+          console.log('🔄 Processing pengajuan:', pengajuan.id, 'for NIS:', pengajuan.nis);
+          
+          // Get student data - try from relation first, then fallback to NIS lookup
+          let studentData = pengajuan.siswa;
+          if (!studentData && pengajuan.nis) {
+            try {
+              studentData = await approvalService.getStudentByNis(pengajuan.nis);
+            } catch (err) {
+              console.error('❌ Failed to get student data for NIS:', pengajuan.nis, err);
+              studentData = { nama: `NIS: ${pengajuan.nis}`, kelas: 'Unknown' };
+            }
+          }
+          
+          // Fallback if still no student data
+          if (!studentData) {
+            studentData = { nama: `NIS: ${pengajuan.nis}`, kelas: 'Unknown' };
+          }
           
           // Determine the type of request based on alasan
           let title = 'Izin';
-          if (pengajuan.alasan.toLowerCase().includes('sakit')) {
+          const alasanLower = pengajuan.alasan.toLowerCase();
+          if (alasanLower.includes('sakit')) {
             title = 'Izin Sakit';
-          } else if (pengajuan.alasan.toLowerCase().includes('keluarga')) {
+          } else if (alasanLower.includes('keluarga')) {
             title = 'Izin Keluarga';
-          } else if (pengajuan.alasan.toLowerCase().includes('dokter')) {
+          } else if (alasanLower.includes('dokter')) {
             title = 'Izin Dokter';
-          } else if (pengajuan.alasan.toLowerCase().includes('terlambat')) {
+          } else if (alasanLower.includes('terlambat') || alasanLower.includes('males')) {
             title = 'Keterlambatan';
+          } else if (alasanLower.includes('urusan')) {
+            title = 'Izin Urusan';
           }
 
-          // Calculate duration
+          // Calculate duration and create description
           const startDate = new Date(pengajuan.tanggal_mulai);
           const endDate = new Date(pengajuan.tanggal_selesai);
           const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -74,8 +92,8 @@ const Approvals = () => {
             title: title,
             description: description,
             user: {
-              name: studentData?.nama || 'Unknown Student',
-              class: studentData?.kelas || pengajuan.nis
+              name: studentData?.nama || `NIS: ${pengajuan.nis}`,
+              class: studentData?.kelas || 'Unknown'
             },
             status: pengajuan.status,
             nis: pengajuan.nis,
@@ -83,7 +101,9 @@ const Approvals = () => {
             tanggal_selesai: pengajuan.tanggal_selesai,
             alasan: pengajuan.alasan,
             keterangan: pengajuan.keterangan,
-            file_pendukung: pengajuan.file_pendukung
+            tanggal_pengajuan: pengajuan.tanggal_pengajuan,
+            disetujui_oleh: pengajuan.disetujui_oleh,
+            tanggal_disetujui: pengajuan.tanggal_disetujui
           };
         }));
         
@@ -104,9 +124,17 @@ const Approvals = () => {
 
   useEffect(() => {
     console.log('🔄 useEffect triggered, calling loadApprovals...');
+    console.log('🔄 Current params:', { currentPage, searchQuery });
     loadApprovals();
-  }, [currentPage, searchQuery]);
+  }, [currentPage]); // Remove searchQuery from dependency to avoid infinite loops
 
+  // Initial load when component mounts
+  useEffect(() => {
+    console.log('🚀 Component mounted, loading initial data...');
+    loadApprovals();
+  }, []); // Empty dependency array for mount only
+
+  // Separate effect for search to handle it manually
   useEffect(() => {
     // Load any additional JavaScript functionality
     const loadApprovalsJS = async () => {
@@ -121,63 +149,83 @@ const Approvals = () => {
 
   const handleApprove = async (id) => {
     try {
+      console.log('📝 Approving request with ID:', id);
+      
       const approval = approvals.find(a => a.id === id);
-      if (approval?.status === 'pending') {
+      if (!approval) {
+        alert('Request not found');
+        return;
+      }
+
+      if (approval.status === 'pending') {
         // Approve pending request
-        const { error } = await approvalDatabase.approveRequest(id);
+        const { error } = await approvalService.approveRequest(id);
         if (error) {
           console.error('Error approving request:', error);
-          alert('Failed to approve request');
+          alert('Failed to approve request: ' + error.message);
         } else {
+          console.log('✅ Request approved successfully');
+          alert('Request approved successfully!');
           loadApprovals(); // Reload data
         }
-      } else if (approval?.status === 'approved') {
-        // Accept approved request (final confirmation)
-        const { error } = await approvalDatabase.acceptApproval(id);
-        if (error) {
-          console.error('Error accepting approval:', error);
-          alert('Failed to accept approval');
-        } else {
-          loadApprovals(); // Reload data
-        }
+      } else if (approval.status === 'approved') {
+        // This could be used for a final confirmation step if needed
+        alert('Request is already approved');
+      } else if (approval.status === 'rejected') {
+        alert('Cannot approve a rejected request');
       }
     } catch (error) {
       console.error('Error in handleApprove:', error);
-      alert('An error occurred');
+      alert('An error occurred while processing the request');
     }
   };
 
   const handleReject = async (id) => {
     try {
+      console.log('❌ Rejecting request with ID:', id);
+      
       const approval = approvals.find(a => a.id === id);
-      if (approval?.status === 'pending') {
+      if (!approval) {
+        alert('Request not found');
+        return;
+      }
+
+      if (approval.status === 'pending') {
         // Reject pending request
-        const { error } = await approvalDatabase.rejectRequest(id);
+        const { error } = await approvalService.rejectRequest(id);
         if (error) {
           console.error('Error rejecting request:', error);
-          alert('Failed to reject request');
+          alert('Failed to reject request: ' + error.message);
         } else {
+          console.log('❌ Request rejected successfully');
+          alert('Request rejected successfully!');
           loadApprovals(); // Reload data
         }
-      } else if (approval?.status === 'approved') {
-        // Cancel approved request
-        const { error } = await approvalDatabase.cancelApproval(id);
+      } else if (approval.status === 'approved') {
+        // Reset approved request back to pending
+        const { error } = await approvalService.resetToPending(id);
         if (error) {
-          console.error('Error canceling approval:', error);
-          alert('Failed to cancel approval');
+          console.error('Error resetting approval:', error);
+          alert('Failed to reset approval: ' + error.message);
         } else {
+          console.log('� Approval reset to pending');
+          alert('Approval reset to pending!');
           loadApprovals(); // Reload data
         }
+      } else if (approval.status === 'rejected') {
+        alert('Request is already rejected');
       }
     } catch (error) {
       console.error('Error in handleReject:', error);
-      alert('An error occurred');
+      alert('An error occurred while processing the request');
     }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
+    console.log('🔍 Search submitted with query:', searchQuery);
     setCurrentPage(1); // Reset to first page when searching
+    loadApprovals(); // Trigger search
   };
 
   // Calculate pagination
@@ -211,7 +259,7 @@ const Approvals = () => {
             <div className="search-input-container">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari nama siswa..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
@@ -233,7 +281,7 @@ const Approvals = () => {
               </div>
             ) : (
               approvals.map((approval) => (
-            <div key={approval.id} className={`action-card ${approval.status === 'pending' ? 'pending-card' : 'approved-card'}`}>
+            <div key={approval.id} className="action-card pending-card">
               <div className="card-header">
                 <span className="card-category">{approval.category}</span>
                 <h4 className="card-title">{approval.title}</h4>
@@ -251,37 +299,20 @@ const Approvals = () => {
                 </div>
               </div>
               <div className="action-buttons">
-                {approval.status === 'pending' ? (
-                  <>
-                    <button 
-                      className="btn-accept"
-                      onClick={() => handleApprove(approval.id)}
-                    >
-                      <img src="/Check.svg" alt="Accept" />
-                    </button>
-                    <button 
-                      className="btn-decline"
-                      onClick={() => handleReject(approval.id)}
-                    >
-                      <img src="/X.svg" alt="Decline" />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button 
-                      className="btn-cancel"
-                      onClick={() => handleReject(approval.id)}
-                    >
-                      Batalkan Presensi
-                    </button>
-                    <button 
-                      className="btn-accept-text"
-                      onClick={() => handleApprove(approval.id)}
-                    >
-                      Terima Presensi
-                    </button>
-                  </>
-                )}
+                <button 
+                  className="btn-accept"
+                  onClick={() => handleApprove(approval.id)}
+                  title="Approve Request"
+                >
+                  <img src="/Check.svg" alt="Accept" />
+                </button>
+                <button 
+                  className="btn-decline"
+                  onClick={() => handleReject(approval.id)}
+                  title="Reject Request"
+                >
+                  <img src="/X.svg" alt="Decline" />
+                </button>
               </div>
             </div>
           ))

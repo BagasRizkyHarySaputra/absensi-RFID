@@ -262,11 +262,45 @@
 .activity-pagination .page-btn[aria-current="page"] {
   color: #FFFFFF !important;
 }
+
+/* Navigation button styles for Activity page */
+.pagination .nav-button {
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  min-width: 38px;
+}
+
+.pagination .nav-button:hover:not(:disabled) {
+  background: rgba(91, 98, 179, 0.1) !important;
+}
+
+.pagination .nav-button:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
+.pagination .ellipsis {
+  color: #5B62B3;
+  font-weight: 500;
+  padding: 0.5rem 0.25rem;
+}
 /* ensure only one ellipsis style (purple on plain background) */
 /* previously white on gradient background removed with oval */
 
 /* Mobile layout: keep table format and allow scrolling */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  html, body { overflow-x: hidden; }
+  .activity-page,
+  .activity-card,
+  .activity-table-wrap { overflow-x: hidden; }
   .activity-page {
     height: auto;
     min-height: 100dvh;
@@ -292,17 +326,17 @@
     padding: 0;
     box-shadow: none;
     background: transparent;
-    overflow: auto; /* enable scroll */
-    -webkit-overflow-scrolling: touch; /* smooth momentum on iOS */
+    overflow: visible; /* remove horizontal scroll on phones */
     max-height: none;
   }
 
   .activity-table {
     border-spacing: 0;
     font-size: 0.875rem;
-    min-width: 820px; /* allow horizontal scroll if needed */
-    display: table; /* revert to normal table on mobile */
-    table-layout: fixed; /* fixed layout on mobile */
+    width: 100%;
+    min-width: 100%; /* fit viewport, no horizontal scroll */
+    display: table; /* keep table semantics */
+    table-layout: auto; /* let columns shrink within viewport */
   }
 
   /* Keep normal table semantics; header remains hidden because we use external band */
@@ -315,18 +349,40 @@
   .activity-table tbody td { 
     display: table-cell;
     text-align: center;
-    padding: 0.75rem 0.5rem;
+    padding: 0.75rem 0.4rem;
+    white-space: normal; /* allow wrapping */
+    word-break: break-word; /* prevent horizontal overflow */
   }
   .activity-table tbody td::before { content: none; }
 
-  /* Make the external band scrollable horizontally along with the table on small screens */
-  .activity-table-head { overflow: auto; -webkit-overflow-scrolling: touch; }
-  .activity-table-head .head-grid { min-width: 820px; }
+  /* Make the external band fixed width to viewport (no horizontal scroll) */
+  .activity-table-head { overflow: hidden; }
+  .activity-table-head .head-grid { min-width: 100%; }
 
   /* Pagination tweaks for smaller screens */
   .activity-pagination { padding: 0.5rem 1rem; }
   .activity-pagination::before { content: none !important; display: none !important; }
   .page-btn, .page-next, .page-prev { width: 2.25rem; height: 2.25rem; font-size: 0.9rem; border-radius: 0.625rem; background: transparent; box-shadow: none; }
+}
+
+/* Mobile: display only Date, Presence, Name, Class, Status
+   Hide Time (2), NIS (4) and Information (8) */
+@media (max-width: 767px) {
+  .activity-table-head .head-grid span:nth-child(2), /* Time */
+  .activity-table-head .head-grid span:nth-child(4), /* NIS */
+  .activity-table-head .head-grid span:nth-child(8)  /* Information */ {
+    display: none;
+  }
+
+  .activity-table tbody td:nth-child(2), /* Time */
+  .activity-table tbody td:nth-child(4), /* NIS */
+  .activity-table tbody td:nth-child(8)  /* Information */ {
+    display: none;
+  }
+
+  /* Re-balance visible columns so they fill available width */
+  .activity-table-head .head-grid { min-width: auto; grid-template-columns: 1.2fr 1fr 1.8fr 1fr 1fr; }
+  .activity-table tbody tr { grid-template-columns: 1.2fr 1.8fr 1.2fr 0.9fr 1.2fr; }
 }
 
 /* Wide desktop: use the full available width */

@@ -21,13 +21,38 @@ export default function HistoryPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [statistics, setStatistics] = useState(null);
+	const [currentUser, setCurrentUser] = useState(null);
 	const pageSize = 10;
+
+	// Get current user from localStorage
+	useEffect(() => {
+		try {
+			const savedUser = localStorage.getItem('absensi_user');
+			if (savedUser) {
+				const userData = JSON.parse(savedUser);
+				setCurrentUser(userData);
+				console.log('Current user loaded:', userData);
+			} else {
+				setError('No user logged in. Please login first.');
+			}
+		} catch (err) {
+			console.error('Error loading user data:', err);
+			setError('Failed to load user information');
+		}
+	}, []);
 
 	// Fetch data function
 	const fetchData = async (page = currentPage) => {
 		try {
 			setLoading(true);
 			setError(null);
+
+			// Only fetch data if we have a current user
+			if (!currentUser || !currentUser.id) {
+				setError('User not found. Please login again.');
+				setLoading(false);
+				return;
+			}
 
 			const options = {
 				page,
@@ -36,7 +61,14 @@ export default function HistoryPage() {
 				sortOrder: 'desc'
 			};
 
-			const result = await fetchAttendanceData(options, filters);
+			// Create user-specific filters - only show current user's attendance
+			const userFilters = {
+				...filters,
+				siswaId: currentUser.id // Filter by current user's database ID
+			};
+
+			console.log('Fetching data for user:', currentUser.nama, 'with ID:', currentUser.id);
+			const result = await fetchAttendanceData(options, userFilters);
 			
 			if (result.success) {
 				setAttendanceData(result.data);
@@ -68,16 +100,19 @@ export default function HistoryPage() {
 
 	// Initial load and when filters change
 	useEffect(() => {
-		fetchData(1);
-		setCurrentPage(1);
-	}, [filters]);
+		// Only fetch data when we have a current user
+		if (currentUser) {
+			fetchData(1);
+			setCurrentPage(1);
+		}
+	}, [filters, currentUser]);
 
 	// When page changes
 	useEffect(() => {
-		if (currentPage !== 1) {
+		if (currentPage !== 1 && currentUser) {
 			fetchData(currentPage);
 		}
-	}, [currentPage]);
+	}, [currentPage, currentUser]);
 
 	// Filter handlers
 	// Controls removed per request; keeping filters state for future extension.
@@ -91,7 +126,11 @@ export default function HistoryPage() {
 
 	// Refresh function
 	const handleRefresh = () => {
-		fetchData(currentPage);
+		if (currentUser) {
+			fetchData(currentPage);
+		} else {
+			setError('No user logged in. Please login first.');
+		}
 	};
 
 	function renderStatus(status) {
@@ -176,9 +215,15 @@ export default function HistoryPage() {
 
 	return (
 		<div className="history-container">
-			{/* Removed standalone History header; page title comes from global Header */}
-			
-			{/* Controls and Statistics removed per request to move the table up */}
+			{/* User Info Header */}
+			{currentUser && (
+				<div className="user-info-header">
+					<h3>Riwayat Kehadiran - {currentUser.nama}</h3>
+					<p className="user-details">
+						NIS: {currentUser.nis} | Kelas: {currentUser.kelas || 'Not specified'}
+					</p>
+				</div>
+			)}
 			
 			{/* Loading State */}
 			{loading && (
@@ -190,18 +235,27 @@ export default function HistoryPage() {
 				</div>
 			)}
 
-			{/* Error State */}
+			/* Error State */
 			{error && !loading && (
 				<div className="error-container">
 					<div className="error-message">
-						<h3>ℹ️ Notice</h3>
+						<h3>{error.includes('No user logged in') || error.includes('User not found') ? '🔐 Authentication Required' : 'ℹ️ Notice'}</h3>
 						<p>{error}</p>
-						<button 
-							className="retry-btn"
-							onClick={handleRefresh}
-						>
-							Retry
-						</button>
+						{(error.includes('No user logged in') || error.includes('User not found')) ? (
+							<button 
+								className="retry-btn"
+								onClick={() => window.location.href = '/'}
+							>
+								Go to Login
+							</button>
+						) : (
+							<button 
+								className="retry-btn"
+								onClick={handleRefresh}
+							>
+								Retry
+							</button>
+						)}
 					</div>
 				</div>
 			)}
@@ -210,7 +264,7 @@ export default function HistoryPage() {
 			{!loading && (
 				<div className="history-card">
 					<div className="data-info">
-						<p>Page {currentPage} of {totalPages}</p>
+						<p>Page {currentPage} of {totalPages} | Showing your personal attendance history</p>
 					</div>
 					
 					<div className="table-scroll">
@@ -246,7 +300,12 @@ export default function HistoryPage() {
 								) : (
 									<tr>
 										<td colSpan="9" className="no-data">
-											No attendance data found
+											No attendance records found for your account.
+											{currentUser && (
+												<div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#64748B' }}>
+													Showing data for {currentUser.nama} (NIS: {currentUser.nis})
+												</div>
+											)}
 										</td>
 									</tr>
 								)}

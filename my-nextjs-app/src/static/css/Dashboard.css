@@ -6,6 +6,12 @@
   font-family: var(--font-poppins), Arial, sans-serif;
 }
 
+/* Loading Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .main-content {
   flex: 1;
   margin-left: 300px; /* Space for sidebar - sesuaikan dengan lebar sidebar */

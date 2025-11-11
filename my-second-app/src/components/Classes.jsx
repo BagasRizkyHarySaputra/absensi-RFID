@@ -27,6 +27,7 @@ const Classes = () => {
   ];
 
   const handleClassClick = (classItem) => {
+
     setSelectedClass(classItem);
   };
 

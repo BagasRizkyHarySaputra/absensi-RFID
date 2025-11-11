@@ -1,6 +1,13 @@
-import React from 'react';
-import ACTIVITYpage from '../../components/ACTIVITYpage';
+"use client";
 
-export default function Page() {
-  return <ACTIVITYpage />;
+import React from 'react';
+import ACTIVITYpage from '@/components/ACTIVITYpage';
+import AuthGuard from '@/components/AuthGuard';
+
+export default function ActivityPage() {
+  return (
+    <AuthGuard>
+      <ACTIVITYpage />
+    </AuthGuard>
+  );
 }

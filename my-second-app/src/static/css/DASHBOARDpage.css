@@ -256,9 +256,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 1rem;
   position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .select-container {
@@ -266,6 +270,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
+  max-width: 250px;
 }
 
 .select-container::before {
@@ -291,28 +297,31 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: var(--font-poppins), 'Poppins', sans-serif;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 2rem;
   border-radius: 999px;
   text-align: center;
-  min-width: 100px;
+  min-width: 180px;
+  width: 100%;
   position: relative;
   z-index: 1;
 }
 
 .arrow-left,
 .arrow-right {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
+  opacity: 0.8;
 }
 
 .arrow-left:hover,
 .arrow-right:hover {
-  opacity: 0.7;
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* Action Cards Container */
@@ -358,6 +367,8 @@
   height: 320px;
   display: flex;
   flex-direction: column;
+  /* Ensure children (including .action-buttons) stretch full card width */
+  align-items: stretch;
 }
 
 .card-header {
@@ -450,13 +461,18 @@
 
 .action-buttons {
   display: flex;
-  gap: 2rem;
-  justify-content: center;
+  gap: 0.5rem; /* tighter so two buttons fit on 200px card */
+  justify-content: space-between; /* left-right placement */
+  align-items: center;
   margin-top: auto;
+  flex-wrap: nowrap; /* prevent wrapping to next line */
+  width: 100%;
+  /* If any parent centers items, force this row to span full width */
+  align-self: stretch;
 }
 
 .btn-accept, .btn-decline {
-  width: 72px;
+  width: 72px; /* match Approvals button width */
   height: 36px;
   border-radius: 8px;
   border: 2px solid;
@@ -468,14 +484,15 @@
   padding: 0;
 }
 
+/* Match Approvals styling */
 .btn-accept {
-  background: #10B981;
-  border-color: #10B981;
+  background: #91C787;
+  border-color: #91C787;
 }
 
 .btn-decline {
   background: transparent;
-  border-color: #EF4444;
+  border-color: #B35B5C;
 }
 
 .btn-accept img, .btn-decline img {
@@ -503,13 +520,29 @@
   color: white;
 }
 
-.btn-submit:hover, .btn-approve:hover, .btn-accept:hover, .btn-decline:hover {
+.btn-submit:hover, .btn-approve:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); }
+
+/* Hover states consistent with Approvals */
+.btn-accept:hover {
+  background: #7FB574;
+  border-color: #7FB574;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(145, 199, 135, 0.15);
+}
+
+.btn-decline:hover {
+  background: rgba(179, 91, 92, 0.1);
+  border-color: #A04B4C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(179, 91, 92, 0.15);
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  html, body { overflow-x: hidden; }
+  .dashboard-container,
+  .dashboard-content,
+  .dashboard-main { overflow-x: hidden; }
   .dashboard-content-wrapper {
     padding: 0.5rem;
   }
@@ -524,8 +557,10 @@
     font-size: 1.5rem;
   }
 
+  /* Make stats and action cards stack and fill the available width on mobile.
+     Desktop styles (outside this media query) are untouched. */
   .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr; /* single column stats on mobile */
     gap: 1rem;
   }
 
@@ -535,26 +570,52 @@
   }
 
   .attendance-table-container {
-    overflow-x: scroll;
+    overflow-x: auto; /* allow horizontal scroll on phones */
+    overflow-y: hidden; /* keep vertical scroll outside container */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
   }
 
   .attendance-table {
-    min-width: 800px;
+    min-width: 760px; /* restore width so content can scroll horizontally */
+    width: 760px; /* fixed baseline to trigger horizontal scroll when viewport narrower */
   }
 
-  .action-buttons {
-    flex-wrap: wrap;
-  }
-
+  /* Force action cards to become full width and stack vertically on mobile.
+     This preserves the fixed-width carousel look on desktop. */
   .action-cards {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: 1rem;
+    padding-right: 0;
+    overflow-x: hidden; /* prevent horizontal scroll on phones */
   }
 
   .action-card {
-    width: 160px;
-    height: 256px;
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    min-height: 160px;
+    box-sizing: border-box;
+  }
+
+  /* Buttons should be easy to tap on mobile: full-width stacked buttons */
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-accept, .btn-decline {
+    width: 100%;
+    min-height: 44px; /* recommended minimum tappable area */
+  }
+
+  /* Make smaller stat cards (if any) fill the grid cell on mobile */
+  .stat-card, .action-card.stat-card {
+    width: 100%;
+    min-height: 120px;
   }
 }
 
@@ -580,4 +641,10 @@
     padding: 0.5rem 0.25rem;
     font-size: 0.75rem;
   }
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

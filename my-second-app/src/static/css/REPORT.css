@@ -115,9 +115,9 @@
 .card-heading { margin: 0; font-size: 0.95rem; font-weight: 800; color: #5B62B3; }
 
 .legend-stack { display: grid; gap: 0.75rem; }
-.chip { display:flex; align-items:center; gap: 0.5rem; width: 150px; border: none; border-radius: 12px; padding: 0.6rem 0.9rem; font-weight: 500; background-clip: padding-box; color: #FFFFFF; }
-.chip .chip-plus { width: 16px; text-align: center; display: inline-block; color: #FFFFFF; }
-.chip .chip-text { color: #FFFFFF; font-size: 1rem; line-height: 1; }
+.chip { display:flex; align-items:center; justify-content: space-between; width: 220px; border: none; border-radius: 12px; padding: 0.6rem 0.9rem; font-weight: 600; background-clip: padding-box; color: #FFFFFF; }
+.chip .chip-label { color: #FFFFFF; font-size: 1rem; line-height: 1; text-align: left; }
+.chip .chip-percentage { color: #FFFFFF; font-weight: 800; text-align: right; margin-left: 1rem; min-width: 3ch; }
 .chip.hadir { background: #5C81E2; }
 .chip.izin { background: #2E65D8; }
 .chip.alpha { background: #E6AFC6; }
@@ -143,5 +143,13 @@
 	.report-page { padding: 1rem; }
 		.report-header { grid-template-columns: 1fr; align-items: start; }
 		.report-meta { text-align: left; }
+}
+
+/* Additional mobile niceties for very small screens */
+@media (max-width: 420px) {
+	.chip { width: 100%; justify-content: space-between; }
+	.chip .chip-label { text-align: left; }
+	.pie { width: 140px; height: 140px; }
+	.report-card .card-content { grid-template-columns: 1fr !important; }
 }
 

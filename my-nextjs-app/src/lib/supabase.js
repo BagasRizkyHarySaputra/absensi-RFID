@@ -4,8 +4,28 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+console.log('Supabase config check:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlValue: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'undefined'
+});
+
+// Create Supabase client only if environment variables are available
+let supabase = null;
+
+if (supabaseUrl && supabaseAnonKey) {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    console.log('Supabase client created successfully');
+  } catch (error) {
+    console.error('Failed to create Supabase client:', error);
+    supabase = null;
+  }
+} else {
+  console.warn('Supabase environment variables not configured. Please check .env.local file.');
+}
+
+export { supabase };
 
 // Database helper functions
 export const db = {

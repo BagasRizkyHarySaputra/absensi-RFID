@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { getJadwalSchedule, getMockSchedule } from "../lib/jadwalService2";
+import { useAuth } from "../hooks/useAuth";
 import "../static/css/kelas.css";
 
 // Optional helper
@@ -44,27 +46,53 @@ function generateDaySlots(day) {
   return out;
 }
 
-function makeLessons() {
-  // Create 12 mock lessons per day
-  const teachers = ["Bu Inung", "Bu Nisa", "Frau Vanda"]; // sample teachers
-  const subjects = ["KK SIJA", "B. Jerman", "Matematika", "Fisika", "Bahasa Indonesia", "PKK"]; // rotate
-  const data = {};
-  for (let d = 0; d < 5; d++) {
-    const list = [];
-    for (let j = 1; j <= 12; j++) {
-      const s = subjects[(d + j) % subjects.length] || subjects[0];
-      const t = teachers[(d + j) % teachers.length] || teachers[0];
-      list.push({ id: `${d}-${j}`, subject: s, teacher: t });
-    }
-    data[d + 1] = list; // days 1..5
-  }
-  return data;
-}
+// Previous mock lesson generator retained as fallback via service
 
 export default function KelasPage() {
-  const [day, setDay] = useState(1); // 1..5
+  const { user } = useAuth();
+  // Determine initial day using Jakarta timezone (UTC+7). Map Mon=1..Fri=5 else default 1.
+  const initialDay = (() => {
+    const nowUtc = new Date();
+    // convert to Jakarta by adding offset (minutes * 60000)
+    const jakarta = new Date(nowUtc.getTime() + 7 * 60 * 60000);
+    const d = jakarta.getUTCDay(); // still 0..6 but using shifted time basis
+    if (d >= 1 && d <= 5) return d; // Mon..Fri
+    return 1; // weekend -> show Monday as default
+  })();
+  const [day, setDay] = useState(initialDay); // 1..5
   const [nowMins, setNowMins] = useState(() => new Date().getHours() * 60 + new Date().getMinutes());
-  const schedule = useMemo(() => makeLessons(), []);
+  const [schedule, setSchedule] = useState(() => getMockSchedule());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [debugInfo, setDebugInfo] = useState(null);
+  // Load real schedule from database (optional: specify kelas if identification available)
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      setError(null);
+      const kelasName = user?.kelas || undefined;
+      const result = await getJadwalSchedule(kelasName);
+      if (cancelled) return;
+      if (result.success) {
+        setSchedule(result.data);
+        // Check if any subject exists; if none, inform user but keep UI
+        const hasAny = Object.values(result.data || {}).some(arr => Array.isArray(arr) && arr.some(it => it.subject));
+        if (!hasAny) {
+          setError(kelasName ? `Tidak ada jadwal untuk kelas ${kelasName}` : 'Tidak ada jadwal yang tersedia');
+        }
+        setDebugInfo(`Loaded schedule for kelas=${kelasName || 'ALL'} hasAny=${hasAny}`);
+      } else {
+        console.warn('Using mock schedule, failed to load jadwal:', result.error);
+        setError(result.error);
+        setSchedule(getMockSchedule());
+        setDebugInfo(`Fallback mock used. Error=${result.error}`);
+      }
+      setLoading(false);
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [user?.kelas]);
   const slotsByDay = useMemo(() => ({
     1: generateDaySlots(1),
     2: generateDaySlots(2),
@@ -75,7 +103,9 @@ export default function KelasPage() {
 
   // Determine current weekday mapping: Mon=1..Fri=5 (else 0 for weekend)
   const todayIdx = (() => {
-    const gd = new Date().getDay(); // 0..6 (Sun..Sat)
+    const nowUtc = new Date();
+    const jakarta = new Date(nowUtc.getTime() + 7 * 60 * 60000);
+    const gd = jakarta.getUTCDay(); // 0..6 (Sun..Sat) based on Jakarta time
     if (gd >= 1 && gd <= 5) return gd; // Mon..Fri
     return 0;
   })();
@@ -100,6 +130,14 @@ export default function KelasPage() {
     <section className="kelas-container">
       <div className="kelas-card">
         <div className="kelas-header">{DAYS[day - 1]}</div>
+        {error && (
+          <div className="kelas-error" aria-live="polite" style={{ color: '#b91c1c', fontSize: '0.75rem', marginBottom: '4px' }}>
+            {error}
+          </div>
+        )}
+        {debugInfo && (
+          <div className="kelas-debug" style={{ display: 'none' }}>{debugInfo}</div>
+        )}
         <div className="kelas-list-scroll" role="list">
           {rows.map((row, idx) => {
             const slot = slotsByDay[day][idx];
@@ -107,9 +145,11 @@ export default function KelasPage() {
             return (
             <div key={row.id} className={`kelas-item ${isCurrent ? "current" : ""}`} role="listitem">
               <span className="subject">{row.subject}</span>
-              <span className="time">{fmt(slotsByDay[day][idx]?.start)}
-                {" "}-{" "}
-                {fmt(slotsByDay[day][idx]?.end)}</span>
+              <span className="time">
+                {row.timeLabel
+                  ? row.timeLabel
+                  : `${fmt(slotsByDay[day][idx]?.start)} - ${fmt(slotsByDay[day][idx]?.end)}`}
+              </span>
               <span className="teacher">{row.teacher}</span>
             </div>
           );})}

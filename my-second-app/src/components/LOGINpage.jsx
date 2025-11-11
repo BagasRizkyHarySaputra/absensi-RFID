@@ -1,18 +1,29 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import LOGINbackground from './LOGINbackground';
-import DASHBOARDpage from './DASHBOARDpage';
+import { useAuth } from '../hooks/useAuth';
 import '../static/css/LOGINpage.css';
 
 const LOGINpage = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    nis: '',
     password: ''
   });
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const { login, isAuthenticated, user, loading } = useAuth();
+  const router = useRouter();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, loading, router]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,23 +35,59 @@ const LOGINpage = () => {
     if (loginError) setLoginError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Check credentials
-    if (formData.email === 'admin@gmail.com' && formData.password === 'admin123') {
-      setIsLoggedIn(true);
-      setLoginError('');
-      console.log('Login successful');
-    } else {
-      setLoginError('Invalid email or password');
-      console.log('Login failed');
+    if (!formData.nis.trim() || !formData.password.trim()) {
+      setLoginError('Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+    setLoginError('');
+
+    try {
+      const result = await login(formData.nis.trim(), formData.password);
+      
+      if (result.success) {
+        // Success - redirect will happen automatically via useEffect
+        console.log('Login successful:', result.user);
+        router.push('/dashboard');
+      } else {
+        setLoginError(result.error || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoginError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // If logged in, show dashboard
-  if (isLoggedIn) {
-    return <DASHBOARDpage onLogout={() => setIsLoggedIn(false)} />;
+  // Show loading if checking authentication
+  if (loading) {
+    return (
+      <div className="login-container">
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          flexDirection: 'column',
+          gap: '1rem'
+        }}>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '4px solid #e5e7eb',
+            borderTop: '4px solid #3b82f6',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}></div>
+          <p style={{ color: '#6b7280', fontFamily: 'Poppins, sans-serif' }}>Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -70,15 +117,16 @@ const LOGINpage = () => {
             )}
             
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="nis">Email / NIS</label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="nis"
+                name="nis"
+                value={formData.nis}
                 onChange={handleInputChange}
-                placeholder="Enter your email"
+                placeholder="Enter your email or NIS"
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -92,23 +140,53 @@ const LOGINpage = () => {
                 onChange={handleInputChange}
                 placeholder="Enter your password"
                 required
+                disabled={isLoading}
               />
             </div>
             
             <div className="form-options">
               <label className="remember-me">
-                <input type="checkbox" />
+                <input type="checkbox" disabled={isLoading} />
                 <span>Remember me</span>
               </label>
-              <a href="#" className="forgot-password">Forgot password?</a>
+              <a href="#" className="forgot-password" style={{ opacity: isLoading ? 0.5 : 1 }}>
+                Forgot password?
+              </a>
             </div>
             
-            <button type="submit" className="login-button">
-              Log in
+            <button type="submit" className="login-button" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span style={{ marginRight: '8px' }}>Signing in...</span>
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    border: '2px solid #ffffff40',
+                    borderTop: '2px solid #ffffff',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite',
+                    display: 'inline-block'
+                  }}></div>
+                </>
+              ) : (
+                'Log in'
+              )}
             </button>
           </form>
           
-          {/* login-footer removed as per latest request */}
+          <div style={{ 
+            marginTop: '1.5rem', 
+            padding: '1rem', 
+            background: '#f8fafc', 
+            borderRadius: '8px',
+            fontSize: '0.875rem',
+            color: '#64748b'
+          }}>
+            <div style={{ marginBottom: '0.5rem', fontWeight: '500', color: '#374151' }}>
+              Demo Login:
+            </div>
+            <div>Admin: <code>admin@gmail.com</code> / <code>admin123</code></div>
+          </div>
         </div>
       </div>
 

@@ -36,17 +36,21 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
   width: 100%;
-  padding: 1rem 3.5rem 1rem 1.5rem;
+  /* Increase right padding so placeholder/text never collides with icon */
+  padding: 1rem 3.75rem 1rem 1.5rem;
   border: none;
   background: transparent;
   font-size: 1rem;
   font-family: 'Poppins', sans-serif;
   color: #374151;
   outline: none;
+  box-sizing: border-box;
 }
 
 .search-input::placeholder {
@@ -55,7 +59,7 @@
 
 .search-button {
   position: absolute;
-  right: 1rem;
+  right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
@@ -65,6 +69,16 @@
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Keep icon readable across devices (override img width/height attributes) */
+.search-button img {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
 }
 
 .search-button:hover {
@@ -194,9 +208,10 @@
 /* Pending cards with icon buttons */
 .pending-card .action-buttons {
   flex-direction: row;
-  gap: 1.5rem;
+  gap: 0.5rem; /* compact spacing */
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* push to left and right */
+  width: 100%;
 }
 
 /* Approved cards with text buttons */
@@ -358,6 +373,79 @@
   border-color: #5B62B3;
 }
 
+/* Rejected cards */
+.rejected-card {
+  border-left: 4px solid #e74c3c;
+  background: linear-gradient(135deg, #fdf2f2, #fcf4f4);
+}
+
+.rejected-card .card-title {
+  color: #c0392b;
+}
+
+/* Status info styles */
+.approval-info, .rejection-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #666;
+  font-size: 0.8rem;
+  gap: 0.25rem;
+}
+
+.approval-info {
+  color: #27ae60;
+}
+
+.rejection-info {
+  color: #e74c3c;
+}
+
+.approval-info small, .rejection-info small {
+  display: block;
+  font-weight: 500;
+}
+
+/* Update rejected card action buttons */
+.rejected-card .action-buttons {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mobile tweaks: stack grid, make cards touch-friendly without touching desktop */
+@media (max-width: 767px) {
+  .approvals-content { padding: 1rem; }
+  .search-form { max-width: 100%; padding: 0 0.5rem; }
+  .search-input-container { min-height: 60px; }
+  .search-input { padding: 0.9rem 4.5rem 0.9rem 1.25rem; font-size: 0.98rem; }
+  .search-button { right: 0.5rem; padding: 0.4rem; min-width: 48px; min-height: 48px; }
+  .search-button img { width: 32px; height: 32px; }
+  .approvals-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .action-card { min-height: auto; padding: 1rem; }
+
+  /* Make action buttons stack and expand full width for easier tapping */
+  .action-buttons, .approved-card .action-buttons, .rejected-card .action-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+
+  .pending-card .action-buttons {
+    flex-direction: column; /* on small screens show stacked Accept/Decline */
+  }
+
+  .btn-accept, .btn-decline, .btn-cancel, .btn-accept-text {
+    width: 100%;
+    min-height: 44px; /* ensure target is large enough */
+    box-sizing: border-box;
+  }
+
+  .user-info { flex-direction: row; gap: 0.75rem; align-items: center; }
+  .user-details { text-align: left; }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .approvals-page {
@@ -385,4 +473,26 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
   }
+}
+
+/* Large phones & narrow fold (≤431px) - tighter layout but keep clear spacing */
+@media (max-width: 431px) {
+  .search-input { padding: 0.85rem 4.75rem 0.85rem 1.1rem; font-size: 0.95rem; }
+  .search-button { right: 0.6rem; }
+}
+
+/* Ultra narrow (≤370px) e.g. older iPhone SE / Galaxy S8 portrait */
+@media (max-width: 370px) {
+  .search-input { padding-right: 5rem; font-size: 0.9rem; }
+  .search-button { right: 0.5rem; padding: 0.35rem; }
+}
+
+/* Galaxy Z Fold portrait (≈373-393px inner widths vary) ensure non-overlap */
+@media (min-width: 372px) and (max-width: 405px) {
+  .search-input { padding-right: 4.9rem; }
+}
+
+/* Wide phones where placeholder can extend (e.g. 412, 430) keep enough room */
+@media (min-width: 406px) and (max-width: 480px) {
+  .search-input { padding-right: 4.6rem; }
 }

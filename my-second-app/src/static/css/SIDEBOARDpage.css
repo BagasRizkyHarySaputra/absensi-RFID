@@ -7,11 +7,32 @@
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
   font-family: var(--font-poppins), 'Poppins', sans-serif;
   transform: translateX(0);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.3s ease,
-              visibility 0.3s ease;
+  /* Smooth slide + width collapse for desktop */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s ease,
+              border-right 0.3s ease,
+              box-shadow 0.3s ease,
+              opacity 0.3s ease;
   opacity: 1;
   visibility: visible;
+}
+
+/* Desktop behavior when sidebar is closed: remove its width so no gap remains */
+@media (min-width: 769px) {
+  .dashboard-sidebar.closed {
+    /* Collapse width smoothly so main content glides left */
+    width: 0 !important;
+    flex: 0 0 auto !important; /* allow width animation to control space */
+    min-width: 0 !important;
+    padding: 0 !important;
+    border-right: 0 !important;
+    box-shadow: none !important;
+    opacity: 0; /* fade out during slide */
+    /* keep visibility so transition is smooth; clicks disabled */
+    pointer-events: none;
+    overflow: hidden;
+  }
 }
 
 .sidebar-nav {
