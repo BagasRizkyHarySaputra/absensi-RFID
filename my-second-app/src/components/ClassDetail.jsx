@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../static/css/ClassDetail.css';
 import HEADERINpage from './HEADERINpage';
-import statistikService from '../lib/statistik';
+import AttendanceReportDashboard from './AttendanceReportDashboard';
 import { createClient } from '@supabase/supabase-js';
 
 const ClassDetail = ({ classData, onBack }) => {
@@ -40,31 +40,12 @@ const ClassDetail = ({ classData, onBack }) => {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
   const timeRanges = ['Today', 'This Week', 'This Month', 'This Year'];
 
-  // Build a conic-gradient pie background from values and colors (same as REPORT)
-  function pieBackground(values, colors) {
-    const total = values.reduce((s, v) => s + v, 0) || 1;
-    let acc = 0;
-    const stops = values.map((v, i) => {
-      const start = (acc / total) * 100;
-      const end = ((acc + v) / total) * 100;
-      acc += v;
-      return `${colors[i]} ${start}% ${end}%`;
-    });
-    return `conic-gradient(${stops.join(', ')})`;
-  }
-
-  // Live statistik data for this class
-  const [attValues, setAttValues] = useState([0, 0, 0]); // [Hadir, Izin, Alpha]
-  const [absValues, setAbsValues] = useState([0, 0, 0]); // [Sakit, Izin, Alpha]
-  const [statsLoading, setStatsLoading] = useState(false);
-
   // Schedule data from database
   const [scheduleData, setScheduleData] = useState([]);
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const [scheduleError, setScheduleError] = useState(null);
 
-  const pieColorsAttendance = ['#2E65D8', '#82A9F4', '#E6BFD4'];
-  const pieColorsAbsent = ['#5B62B3', '#82A9F4', '#E6BFD4'];
+  // (Attendance pie handling moved to dashboard components)
 
   // Setup Supabase client - environment variables only
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -131,32 +112,7 @@ const ClassDetail = ({ classData, onBack }) => {
     }
   };
 
-  function computeRange(label) {
-    const now = new Date();
-    if (label === 'Today') {
-      const start = new Date(now); start.setHours(0,0,0,0);
-      const end = new Date(start); end.setDate(end.getDate()+1);
-      return { start: start.toISOString(), end: end.toISOString() };
-    }
-    if (label === 'This Week') {
-      const start = new Date(now);
-      const day = start.getDay();
-      const diffToMonday = (day + 6) % 7;
-      start.setDate(start.getDate()-diffToMonday);
-      start.setHours(0,0,0,0);
-      const end = new Date(start); end.setDate(end.getDate()+7);
-      return { start: start.toISOString(), end: end.toISOString() };
-    }
-    if (label === 'This Year') {
-      const start = new Date(now.getFullYear(), 0, 1);
-      const end = new Date(now.getFullYear()+1, 0, 1);
-      return { start: start.toISOString(), end: end.toISOString() };
-    }
-    // default: This Month
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    const end = new Date(start); end.setMonth(end.getMonth()+1);
-    return { start: start.toISOString(), end: end.toISOString() };
-  }
+  // (computeRange no longer needed locally after refactor)
 
   // Load schedule data from database
   useEffect(() => {
@@ -180,9 +136,17 @@ const ClassDetail = ({ classData, onBack }) => {
           const transformedSchedule = result.data.map((item, index) => ({
             id: item.id,
             subject: item.mapel,
-            teacher: item.guru || 'TBA', 
-            startPeriod: index + 1, // Simple period numbering
-            duration: Math.max(1, Math.round(item.banyak_jam || 1)), // Ensure at least 1 period
+            // Remove 'TBA' placeholder for break periods like 'Istirahat 2'; leave empty string instead
+            teacher: (() => {
+              const rawGuru = item.guru?.trim();
+              if (!rawGuru) return '';
+              // If subject is a break (contains 'Istirahat'), suppress teacher label
+              const subj = (item.mapel || '').toLowerCase();
+              if (subj.includes('istirahat')) return '';
+              return rawGuru;
+            })(),
+            startPeriod: index + 1,
+            duration: Math.max(1, Math.round(item.banyak_jam || 1)),
             keterangan: item.keterangan,
             originalData: item
           }));
@@ -217,26 +181,7 @@ const ClassDetail = ({ classData, onBack }) => {
     return () => { mounted = false; };
   }, [classData.name, selectedDay]);
 
-  useEffect(() => {
-    let mounted = true;
-    async function loadStats() {
-      setStatsLoading(true);
-      const { start, end } = computeRange(selectedMonth);
-      const res = await statistikService.getAttendanceSummary({ kelas: classData.name, start, end });
-      if (!mounted) return;
-      if (!res.error) {
-        const hadir = res.data?.Hadir || 0;
-        const izin = res.data?.Izin || 0;
-        const alpha = res.data?.Alpha || 0;
-        const sakit = res.data?.Sakit || 0;
-        setAttValues([hadir, izin, alpha]);
-        setAbsValues([sakit, izin, alpha]);
-      }
-      setStatsLoading(false);
-    }
-    loadStats();
-    return () => { mounted = false; };
-  }, [selectedMonth, classData?.name]);
+  // (Stats loading effect removed; handled inside AttendanceReportDashboard)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -297,15 +242,56 @@ const ClassDetail = ({ classData, onBack }) => {
     return schedules[className] || schedules['XI SIJA 1'];
   };
 
+  // Helper: detect break periods (not counted as lesson periods)
+  function isBreak(subj) {
+    return /istirahat/i.test(subj || '');
+  }
+
   // Use database schedule if available, fallback to hardcoded
-  const schedule = scheduleData.length > 0 ? scheduleData : generateSchedule(classData.name);
+  // Enforce period upper bound: Mon-Thu max 10, Fri max 8
+  const dayUpperBound = (() => {
+    const lowerDay = selectedDay.toLowerCase();
+    if (lowerDay === 'friday') return 8;
+    return 10; // Monday-Thursday
+  })();
+
+  const rawSchedule = scheduleData.length > 0 ? scheduleData : generateSchedule(classData.name);
+
+  // Normalize start periods sequentially without gaps for LESSONS ONLY (breaks don't consume period count)
+  // Clamp total lesson periods to dayUpperBound (Mon-Thu=10, Fri=8)
+  let nextPeriod = 1;
+  const schedule = [];
+  for (const item of rawSchedule) {
+    const subj = item.subject || '';
+    const breakItem = isBreak(subj);
+
+    // If we've reached the daily lesson period cap, stop scheduling further lessons.
+    if (!breakItem && nextPeriod > dayUpperBound) {
+      break;
+    }
+
+    if (breakItem) {
+      // Keep break entries but don't increment the lesson period counter
+      schedule.push({ ...item, startPeriod: Math.max(1, nextPeriod), duration: Math.max(1, item.duration || 1), isBreak: true });
+      continue;
+    }
+
+    // For lesson entries, clamp duration to remaining lesson slots
+    const remaining = dayUpperBound - nextPeriod + 1;
+    if (remaining <= 0) {
+      break;
+    }
+    const duration = Math.max(1, Math.min(item.duration || 1, remaining));
+    schedule.push({ ...item, startPeriod: nextPeriod, duration, isBreak: false });
+    nextPeriod += duration;
+  }
 
   // Use the same accent color for all subjects (match KK SIJA color)
   const getSubjectColor = () => '#5B62B3';
 
   // PeriodBoxes: render a contiguous block made of `duration` white cells (merged visually).
   // Each cell shows its period number centered and supports press/touch animation.
-  const PeriodBoxes = ({ startPeriod = 1, duration = 1 }) => {
+  const PeriodBoxes = ({ startPeriod = 1, duration = 1, showNumbers = true }) => {
     const [pressed, setPressed] = useState(() => Array(duration).fill(false));
 
     useEffect(() => {
@@ -340,7 +326,7 @@ const ClassDetail = ({ classData, onBack }) => {
             onTouchStart={() => handlePress(i)}
             onTouchEnd={() => handleRelease(i)}
           >
-            <span className="period-number">{startPeriod + i}</span>
+            <span className="period-number">{showNumbers ? (startPeriod + i) : ''}</span>
           </div>
         ))}
       </div>
@@ -404,22 +390,9 @@ const ClassDetail = ({ classData, onBack }) => {
     };
   }, [schedule]);
 
-  const attendanceReasons = [
-    { label: 'Hadir', color: '#5B8FD9', percentage: 0 },
-    { label: 'Izin', color: '#83A8E8', percentage: 0 },
-    { label: 'Alpha', color: '#D8A8C8', percentage: 0 },
-  ];
+  // (Reason arrays removed — not used after dashboard refactor)
 
-  const absentReasons = [
-    { label: 'Sakit', color: '#5B62B3', percentage: 0 },
-    { label: 'Izin', color: '#83A8E8', percentage: 0 },
-    { label: 'Alpha', color: '#D8A8C8', percentage: 0 },
-  ];
-
-  const attTotal = attValues.reduce((s,v)=>s+v,0);
-  const attPercent = attTotal ? Math.round((attValues[0] / attTotal) * 100) : 0; // hadir rate
-  const absTotal = absValues.reduce((s,v)=>s+v,0);
-  const absPercent = absTotal ? Math.round((absValues[0] / absTotal) * 100) : 0; // sakit rate
+  // (Percent calculations moved inside components for consistent rendering)
 
   return (
     <div className="class-detail-page">
@@ -463,7 +436,7 @@ const ClassDetail = ({ classData, onBack }) => {
                     marginLeft: '0.5rem',
                     fontWeight: 'normal'
                   }}>
-                    • Live from database
+                    
                   </span>
                 )}
                 {!scheduleLoading && scheduleError && schedule.length > 0 && (
@@ -611,7 +584,9 @@ const ClassDetail = ({ classData, onBack }) => {
                       <div key={item.id || index} className="schedule-card" data-duration={item.duration}>
                         <div className="schedule-card-inner">
                           <h4 className="schedule-subject" style={{ color: getSubjectColor(item.subject) }}>{item.subject}</h4>
-                          <p className="schedule-teacher" style={{ color: getSubjectColor(item.subject) }}>{item.teacher}</p>
+                          {item.teacher && !/istirahat/i.test(item.subject || '') && (
+                            <p className="schedule-teacher" style={{ color: getSubjectColor(item.subject) }}>{item.teacher}</p>
+                          )}
                           {item.keterangan && (
                             <p className="schedule-time" style={{ 
                               color: '#6B7280', 
@@ -622,7 +597,7 @@ const ClassDetail = ({ classData, onBack }) => {
                             </p>
                           )}
                           <div className="schedule-periods">
-                            <PeriodBoxes startPeriod={item.startPeriod} duration={item.duration} />
+                            <PeriodBoxes startPeriod={item.startPeriod} duration={item.duration} showNumbers={!item.isBreak} />
                           </div>
                         </div>
                       </div>
@@ -674,58 +649,9 @@ const ClassDetail = ({ classData, onBack }) => {
             </div>
 
             <div className="stats-grid">
-              {/* Student Attendance Report */}
-              <div className="stat-card">
-                <h3 className="stat-title">Student Attendance Report</h3>
-                <div className="stat-content">
-                  <div className="chart-legend">
-                    {attendanceReasons.map((reason, idx) => (
-                      <button key={idx} className="legend-btn" style={{ '--btn-color': reason.color }}>
-                        <span className="btn-icon">+</span>
-                        <span className="btn-label">{reason.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="chart-container">
-                    <div className="pie-wrap">
-                      {statsLoading ? (
-                        <div className="pie loading" />
-                      ) : (
-                        <div className="pie" style={{ background: pieBackground(attValues, pieColorsAttendance) }} />
-                      )}
-                      <div className="pie-center-label">
-                        <span className="chart-label">{attPercent}%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Student Absent Reason Report */}
-              <div className="stat-card">
-                <h3 className="stat-title absent">Student Absent Reason Report</h3>
-                <div className="stat-content">
-                  <div className="chart-legend">
-                    {absentReasons.map((reason, idx) => (
-                      <button key={idx} className="legend-btn absent" style={{ '--btn-color': reason.color }}>
-                        <span className="btn-icon">+</span>
-                        <span className="btn-label">{reason.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="chart-container">
-                    <div className="pie-wrap">
-                      {statsLoading ? (
-                        <div className="pie loading" />
-                      ) : (
-                        <div className="pie" style={{ background: pieBackground(absValues, pieColorsAbsent) }} />
-                      )}
-                      <div className="pie-center-label">
-                        <span className="chart-label">{absPercent}%</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              {/* Student Attendance Report (Expanded full width) */}
+              <div className="stat-card stat-card--full">
+                <AttendanceReportDashboard kelas={classData.name} range={selectedMonth} layout="wide" />
               </div>
             </div>
           </div>

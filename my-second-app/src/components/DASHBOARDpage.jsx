@@ -5,6 +5,7 @@ import SIDEBOARDpage from './SIDEBOARDpage';
 import HEDAERBOARDpage from './HEDAERBOARDpage';
 import ACTIVITYpage from './ACTIVITYpage';
 import REPORT from './REPORT';
+import AttendanceReportDashboard from './AttendanceReportDashboard';
 import DASHBOARDtable from './DASHBOARDtable';
 import HEADERINpage from './HEADERINpage';
 import Classes from './Classes';
@@ -25,19 +26,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Build a conic-gradient pie background from values and colors
-function pieBackground(values, colors, emptyColor = '#CBD5E1') {
-  const total = values.reduce((s, v) => s + v, 0);
-  if (total <= 0) return emptyColor;
-  let acc = 0;
-  const stops = values.map((v, i) => {
-    const start = (acc / total) * 100;
-    const end = ((acc + v) / total) * 100;
-    acc += v;
-    return `${colors[i]} ${start}% ${end}%`;
-  });
-  return `conic-gradient(${stops.join(', ')})`;
-}
+// (Pie background logic now lives inside AttendanceReportDashboard component)
 
 const DASHBOARDpage = ({ onLogout }) => {
   const [currentTime, setCurrentTime] = useState(null);
@@ -53,11 +42,9 @@ const DASHBOARDpage = ({ onLogout }) => {
   const [dashboardApprovals, setDashboardApprovals] = useState([]);
   const [approvalsLoading, setApprovalsLoading] = useState(true);
   
-  // Pie chart states
+  // Attendance report class navigation states
   const [classes, setClasses] = useState([]);
   const [currentClassIndex, setCurrentClassIndex] = useState(0);
-  const [pieChartData, setPieChartData] = useState([0, 0, 0]); // [hadir, izin, alpha]
-  const [pieChartLoading, setPieChartLoading] = useState(false);
 
   // Realtime schedule state
   const [realtimePrev, setRealtimePrev] = useState(null);
@@ -85,12 +72,7 @@ const DASHBOARDpage = ({ onLogout }) => {
     loadClasses();
   }, []);
 
-  // Load pie chart data when current class changes
-  useEffect(() => {
-    if (classes.length > 0) {
-      loadPieChartData();
-    }
-  }, [currentClassIndex, classes]);
+  // (Pie chart data now fetched inside AttendanceReportDashboard component)
 
   // Load realtime schedule slice (prev/current/next) for selected class
   useEffect(() => {
@@ -253,46 +235,7 @@ const DASHBOARDpage = ({ onLogout }) => {
     }
   };
 
-  // Load pie chart data for current class
-  const loadPieChartData = async () => {
-    if (classes.length === 0) return;
-    
-    try {
-      setPieChartLoading(true);
-      const currentClass = classes[currentClassIndex];
-      
-      console.log(`📊 Loading pie chart data for dashboard: ${currentClass}`);
-      
-      // Get today's date range
-      const now = new Date();
-      const today = new Date(now);
-      today.setHours(0, 0, 0, 0);
-      
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      
-      const res = await statistikService.getAttendanceSummary({
-        kelas: currentClass,
-        start: today.toISOString(),
-        end: tomorrow.toISOString()
-      });
-      
-      console.log(`📈 Dashboard pie chart data for ${currentClass}:`, res);
-      
-      const hadir = res?.data?.Hadir || 0;
-      const izin = res?.data?.Izin || 0;
-      const alpha = res?.data?.Alpha || 0;
-      
-      setPieChartData([hadir, izin, alpha]);
-      console.log(`📊 Dashboard pie chart values: [${hadir}, ${izin}, ${alpha}]`);
-      
-    } catch (error) {
-      console.error('❌ Failed to load pie chart data:', error);
-      setPieChartData([0, 0, 0]);
-    } finally {
-      setPieChartLoading(false);
-    }
-  };
+  // (Old pie chart data loader removed; unified logic moved to reusable component)
 
   // Navigate to previous class
   const previousClass = () => {
@@ -537,69 +480,7 @@ const DASHBOARDpage = ({ onLogout }) => {
                 </div>
               </div>
 
-              {/* Realtime Schedule (Prev | Current | Next) */}
-              <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-                  <div className="header-line"></div>
-                  <h3 style={{ margin: 0 }}>Today's Schedule</h3>
-                  <span style={{ color: '#6B7280', fontSize: '0.85rem' }}>
-                    {classes && classes.length > 0 ? classes[currentClassIndex] : 'XI SIJA 2'}
-                  </span>
-                </div>
-                {realtimeError && (
-                  <div style={{ color: '#DC2626', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{realtimeError}</div>
-                )}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                  gap: '0.75rem'
-                }}>
-                  {/* Previous */}
-                  <div className="stat-card" style={{ opacity: realtimePrev ? 1 : 0.5 }}>
-                    <div className="stat-icon">⏮️</div>
-                    <div className="stat-content" style={{ width: '100%' }}>
-                      <h3 className="stat-number" style={{ fontSize: '1rem' }}>
-                        {realtimeLoading ? '...' : (realtimePrev ? (realtimePrev.mapel || '-') : '—')}
-                      </h3>
-                      <p className="stat-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{realtimePrev?.guru || ''}</span>
-                        <span>{realtimePrev?._label || ''}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Current */}
-                  <div className="stat-card" style={{
-                    border: '2px solid #4F46E5',
-                    boxShadow: '0 8px 24px rgba(79,70,229,0.15)'
-                  }}>
-                    <div className="stat-icon">⏱️</div>
-                    <div className="stat-content" style={{ width: '100%' }}>
-                      <h3 className="stat-number" style={{ fontSize: '1rem' }}>
-                        {realtimeLoading ? 'Loading…' : (realtimeCurrent ? (realtimeCurrent.mapel || '-') : 'No ongoing lesson')}
-                      </h3>
-                      <p className="stat-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{realtimeCurrent?.guru || ''}</span>
-                        <span>{realtimeCurrent?._label || ''}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Next */}
-                  <div className="stat-card" style={{ opacity: realtimeNext ? 1 : 0.5 }}>
-                    <div className="stat-icon">⏭️</div>
-                    <div className="stat-content" style={{ width: '100%' }}>
-                      <h3 className="stat-number" style={{ fontSize: '1rem' }}>
-                        {realtimeLoading ? '...' : (realtimeNext ? (realtimeNext.mapel || '-') : '—')}
-                      </h3>
-                      <p className="stat-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{realtimeNext?.guru || ''}</span>
-                        <span>{realtimeNext?._label || ''}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Realtime Schedule removed (mobile + desktop) as requested */}
 
               {/* Main Dashboard Content */}
               <div className="dashboard-layout">
@@ -608,105 +489,16 @@ const DASHBOARDpage = ({ onLogout }) => {
 
                 {/* Bottom Section */}
                 <div className="bottom-section">
-                  {/* Student Attendance Report */}
+                  {/* Student Attendance Report (Unified with REPORT page styling) */}
                   <div className="attendance-report">
                     <div className="report-header">
                       <div className="header-line"></div>
                       <h3>Student Attendance Report</h3>
                     </div>
-                    
-                    <div className="attendance-content">
-                      <div className="attendance-stats">
-                        {(() => {
-                          const total = pieChartData.reduce((a, b) => a + b, 0) || 1;
-                          const percentages = pieChartData.map(v => Math.round((v / total) * 100));
-                          return (
-                            <>
-                              <div className="stat-item hadir">
-                                <span className="stat-bullet">●</span>
-                                <span className="stat-text">Hadir ({percentages[0]}%)</span>
-                              </div>
-                              <div className="stat-item izin">
-                                <span className="stat-bullet">●</span>
-                                <span className="stat-text">Izin ({percentages[1]}%)</span>
-                              </div>
-                              <div className="stat-item alpha">
-                                <span className="stat-bullet">●</span>
-                                <span className="stat-text">Alpha ({percentages[2]}%)</span>
-                              </div>
-                            </>
-                          );
-                        })()}
-                      </div>
-                      
-                      <div className="pie-chart-section">
-                        <div className="pie-chart">
-                          {pieChartLoading ? (
-                            <div className="pie-loading" style={{
-                              width: '100px',
-                              height: '100px',
-                              borderRadius: '50%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              background: '#F3F4F6',
-                              border: '2px dashed #D1D5DB'
-                            }}>
-                              <div style={{
-                                width: '20px',
-                                height: '20px',
-                                border: '2px solid #E5E7EB',
-                                borderTop: '2px solid #5B62B3',
-                                borderRadius: '50%',
-                                animation: 'spin 1s linear infinite'
-                              }}></div>
-                            </div>
-                          ) : (
-                            (() => {
-                              const total = pieChartData.reduce((a, b) => a + b, 0);
-                              const pieColors = ['#2E65D8', '#82A9F4', '#E6BFD4']; // hadir, izin, alpha
-                              
-                              if (total === 0) {
-                                return (
-                                  <div style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    borderRadius: '50%',
-                                    background: '#F3F4F6',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    border: '2px dashed #D1D5DB',
-                                    color: '#9CA3AF',
-                                    fontSize: '0.75rem',
-                                    textAlign: 'center'
-                                  }}>
-                                    <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>📊</div>
-                                    <div>No data</div>
-                                  </div>
-                                );
-                              }
-                              
-                              return (
-                                <div
-                                  className="pie"
-                                  style={{ 
-                                    width: '100px',
-                                    height: '100px',
-                                    borderRadius: '50%',
-                                    background: pieBackground(pieChartData, pieColors)
-                                  }}
-                                  role="img"
-                                  aria-label="Attendance Pie Chart"
-                                />
-                              );
-                            })()
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    
+                    <AttendanceReportDashboard 
+                      kelas={classes.length > 0 ? classes[currentClassIndex] : null}
+                      range="This Month"
+                    />
                     <div className="class-selector">
                       <img 
                         src="/panah-kiri.svg" 

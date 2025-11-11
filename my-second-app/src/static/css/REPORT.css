@@ -5,7 +5,8 @@
 	/* Allow content to grow and let parent (.dashboard-main) handle scrolling */
 	min-height: 100%;
 	padding: 1.5rem;
-	overflow: visible;
+	overflow-x: hidden; /* prevent horizontal overflow on small screens */
+	overflow-y: visible;
 	font-family: var(--font-poppins), 'Poppins', sans-serif;
 	background: #f3f5fa;
 }
@@ -122,13 +123,19 @@
 .chip.izin { background: #2E65D8; }
 .chip.alpha { background: #E6AFC6; }
 
-.report-card .card-content { display: grid !important; grid-template-columns: 220px 1fr !important; gap: 1.25rem; align-items: center; background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 14px; padding: 1rem; }
+.report-card .card-content { display: grid !important; grid-template-columns: 220px 1fr; gap: 1.25rem; align-items: center; background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 14px; padding: 1rem; }
 .report-page .report-card > .card-content { background: transparent !important; box-shadow: none !important; border: 0 !important; }
 .legend-stack { grid-column: 1; justify-self: start; align-self: center; }
 .pie-wrap { grid-column: 2; justify-self: center; align-self: center; }
 
 .pie-wrap { display: grid; place-items: center; }
-.pie { width: 180px; height: 180px; border-radius: 50%; box-shadow: inset 0 0 0 10px rgba(255,255,255,0.6); }
+.pie { 
+	/* Responsive circle: scale down on small screens to avoid right overflow */
+	width: clamp(120px, 58vw, 180px);
+	height: clamp(120px, 58vw, 180px);
+	border-radius: 50%; 
+	box-shadow: inset 0 0 0 10px rgba(255,255,255,0.6); 
+}
 
 .card-footer { display: flex; justify-content: center; padding-top: 0.75rem; }
 .class-pill { padding: 0.5rem 1.25rem; border-radius: 9999px; background: #F1F5FF; border: 1px solid #CAD4FD; color: #5B62B3; font-weight: 800; }
@@ -136,7 +143,24 @@
 /* Responsive */
 @media (max-width: 992px) {
 	.report-grid { grid-template-columns: 1fr; }
-	.card-content { grid-template-columns: 1fr; }
+	/* Force single-column stacking to avoid right overflow on tablets/phones */
+	.report-card .card-content { grid-template-columns: 1fr !important; justify-items: stretch; }
+	.legend-stack { justify-self: stretch; }
+}
+
+/* Tighten layout and scale chart on narrower phones */
+@media (max-width: 600px) {
+	.chip { width: 100%; justify-content: space-between; }
+	/* Force stacking regardless of prior grid settings */
+	.report-card .card-content { 
+		display: flex !important; 
+		flex-direction: column-reverse; /* place pie above chips on mobile */
+		align-items: center; 
+		gap: 0.85rem; 
+	}
+	.legend-stack { width: 100%; }
+	.pie-wrap { width: 100%; display: flex; justify-content: center; }
+	.pie { width: 150px; height: 150px; }
 }
 
 @media (max-width: 480px) {
@@ -149,7 +173,7 @@
 @media (max-width: 420px) {
 	.chip { width: 100%; justify-content: space-between; }
 	.chip .chip-label { text-align: left; }
-	.pie { width: 140px; height: 140px; }
+	.pie { width: 130px; height: 130px; }
 	.report-card .card-content { grid-template-columns: 1fr !important; }
 }
 

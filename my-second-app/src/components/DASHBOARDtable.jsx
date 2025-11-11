@@ -29,7 +29,7 @@ const DASHBOARDtable = () => {
         console.warn('⚠️ Database connection failed, using fallback data');
         setKehadiranData([]);
         setTotalCount(0);
-        setError('Database connection failed');
+        setError(prev => prev || 'Database connection failed. Cek: 1) .env supabase URL/key 2) Table "kehadiran" ada? 3) RLS policies mengizinkan select?');
         setLoading(false);
         return;
       }

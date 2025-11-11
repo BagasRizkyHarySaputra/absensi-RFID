@@ -144,6 +144,11 @@
   gap: 2rem;
 }
 
+/* Hide today's schedule on phone sizes (reuse same breakpoint logic as other mobile rules) */
+@media (max-width: 768px) {
+  .todays-schedule-section { display: none !important; }
+}
+
 /* Attendance Table */
 /* Bottom Section */
 .bottom-section {

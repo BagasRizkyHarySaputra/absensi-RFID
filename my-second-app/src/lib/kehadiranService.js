@@ -17,20 +17,32 @@ export const kehadiranService = {
   testConnection: async () => {
     try {
       console.log('🧪 Testing kehadiran database connection...');
-      const { data, error } = await supabase
+      const { data, error, status, statusText } = await supabase
         .from('kehadiran')
         .select('id')
         .limit(1);
-      
+
+      // If supabase returns an error object or non-200 status
       if (error) {
+        // Attempt to serialize full error for better debugging (handles empty {})
+        let serialized = 'Unknown error';
+        try { serialized = JSON.stringify(error); } catch {}
         console.error('❌ Kehadiran connection failed:', error);
+        console.error('🔍 Serialized error:', serialized);
+        console.error('🔢 Status info:', { status, statusText });
+
+        // Common guidance
+        console.warn('📎 Possible causes: table name mismatch, RLS policy blocking anon key, network/credentials issue.');
         return false;
       }
-      
+
       console.log('✅ Kehadiran connection successful');
       return true;
     } catch (err) {
-      console.error('❌ Kehadiran connection error:', err);
+      let serialized = 'Unknown runtime error';
+      try { serialized = JSON.stringify(err); } catch {}
+      console.error('❌ Kehadiran connection unexpected error:', err);
+      console.error('🔍 Serialized unexpected error:', serialized);
       return false;
     }
   },
